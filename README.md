@@ -1,53 +1,60 @@
-# CodeIgniter 4 Framework
+# Sistem Aset Berbasis Web
 
-## What is CodeIgniter?
+Sistem manajemen aset kantor menggunakan CodeIgniter 4.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+## Fitur
 
-This repository holds the distributable version of the framework.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+- Landing page login admin
+- Login dengan username, password, dan captcha penjumlahan/pengurangan
+- Dashboard setelah login
+- Menu aset untuk mencatat barang (nama, spesifikasi, jenis)
+- Generate QR code otomatis per barang
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## Setup
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+1. Pastikan PHP 8.2+, MySQL, Composer terinstall.
 
-## Important Change with index.php
+2. Clone atau download proyek ini.
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+3. Install dependencies:
+   ```
+   composer install
+   ```
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+4. Buat database MySQL bernama `sistem_aset`.
 
-**Please** read the user guide for a better explanation of how CI4 works!
+5. Update konfigurasi database di `app/Config/Database.php`:
+   - hostname: localhost
+   - username: root (atau sesuai)
+   - password: (sesuai)
+   - database: sistem_aset
 
-## Repository Management
+6. Jalankan migrasi:
+   ```
+   php spark migrate
+   ```
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+7. Jalankan seeder untuk user admin:
+   ```
+   php spark db:seed UserSeeder
+   ```
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+8. Jalankan server:
+   ```
+   php spark serve
+   ```
 
-## Contributing
+9. Akses di browser: http://localhost:8080
 
-We welcome contributions from the community.
+## Login
 
-Please read the [*Contributing to CodeIgniter*](https://github.com/codeigniter4/CodeIgniter4/blob/develop/CONTRIBUTING.md) section in the development repository.
+- Username: admin
+- Password: admin123
 
-## Server Requirements
+## Struktur Database
 
-PHP version 8.2 or higher is required, with the following extensions installed:
-
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
-
-> [!WARNING]
+- users: id, username, password, created_at, updated_at
+- assets: id, nama_barang, spesifikasi, jenis_barang, qr_code, created_at, updated_at
 > - The end of life date for PHP 7.4 was November 28, 2022.
 > - The end of life date for PHP 8.0 was November 26, 2023.
 > - The end of life date for PHP 8.1 was December 31, 2025.
