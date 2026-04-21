@@ -13,8 +13,12 @@
             box-sizing: border-box;
         }
 
+        html,
         body {
-            background: #eceff3;
+            background: #f1f3f5;
+        }
+
+        body {
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -48,7 +52,7 @@
         }
 
         .login-header {
-            background: white;
+            background: #ffffff;
             color: #1f2937;
             padding: 24px 30px;
             border-bottom: 1px solid #eef0f3;
@@ -56,7 +60,7 @@
 
         .header-brand {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 12px;
         }
 
@@ -127,6 +131,17 @@
             margin-bottom: 10px;
         }
 
+        .captcha-refresh {
+            border: none;
+            background: transparent;
+            color: #667eea;
+            font-size: 13px;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 0;
+            margin-top: 8px;
+        }
+
         .btn-login {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -192,10 +207,11 @@
                     <div class="captcha-box">
                         <div class="captcha-question" id="captcha-question">Loading...</div>
                         <label for="captcha" class="form-label" style="margin-top: 10px;">Jawaban Captcha</label>
+                        <button type="button" class="captcha-refresh" id="captcha-refresh">Muat ulang captcha</button>
                     </div>
 
                     <div class="form-group">
-                        <input type="text" class="form-control" id="captcha" name="captcha" placeholder="Masukkan jawaban" required>
+                        <input type="number" class="form-control" id="captcha" name="captcha" placeholder="Masukkan jawaban" required>
                     </div>
 
                     <button type="submit" class="btn-login">Login</button>
@@ -206,7 +222,7 @@
 
     <script>
         function loadCaptcha() {
-            fetch('<?= site_url('captcha') ?>')
+            fetch('<?= site_url('captcha') ?>', { cache: 'no-store' })
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('captcha-question').textContent = data;
@@ -214,8 +230,7 @@
         }
         loadCaptcha();
 
-        // Refresh captcha jika diperlukan
-        document.getElementById('captcha-question').addEventListener('click', loadCaptcha);
+        document.getElementById('captcha-refresh').addEventListener('click', loadCaptcha);
     </script>
 </body>
 </html>
