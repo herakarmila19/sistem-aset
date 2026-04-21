@@ -116,30 +116,61 @@
         }
 
         .captcha-box {
-            background: #f5f7fa;
-            border: 2px solid #e0e0e0;
+            display: flex;
+            align-items: stretch;
+            background: #ffffff;
+            border: 2px solid #d9dee5;
             border-radius: 8px;
-            padding: 15px;
             margin-bottom: 20px;
-            text-align: center;
+            overflow: hidden;
         }
 
         .captcha-question {
-            font-size: 20px;
+            min-width: 170px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f2f5;
+            border-right: 1px solid #d9dee5;
+            font-size: 34px;
+            letter-spacing: 2px;
             font-weight: 700;
-            color: #667eea;
-            margin-bottom: 10px;
+            color: #334155;
+            padding: 0 14px;
+        }
+
+        .captcha-input-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            gap: 8px;
+        }
+
+        .captcha-input-wrap .form-control {
+            border: none;
+            box-shadow: none;
+            padding: 8px;
+            font-size: 34px;
+            line-height: 1;
+            letter-spacing: 2px;
+            height: 100%;
+            color: #6b7280;
+        }
+
+        .captcha-input-wrap .form-control:focus {
+            box-shadow: none;
+            border: none;
         }
 
         .captcha-refresh {
             border: none;
-            background: transparent;
-            color: #667eea;
-            font-size: 13px;
-            text-decoration: underline;
+            background: #eef2f7;
+            color: #475569;
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
             cursor: pointer;
-            padding: 0;
-            margin-top: 8px;
         }
 
         .btn-login {
@@ -206,12 +237,12 @@
 
                     <div class="captcha-box">
                         <div class="captcha-question" id="captcha-question">Loading...</div>
-                        <label for="captcha" class="form-label" style="margin-top: 10px;">Jawaban Captcha</label>
-                        <button type="button" class="captcha-refresh" id="captcha-refresh">Muat ulang captcha</button>
-                    </div>
-
-                    <div class="form-group">
-                        <input type="number" class="form-control" id="captcha" name="captcha" placeholder="Masukkan jawaban" required>
+                        <div class="captcha-input-wrap">
+                            <input type="text" class="form-control" id="captcha" name="captcha" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="Captcha" required>
+                            <button type="button" class="captcha-refresh" id="captcha-refresh" title="Muat ulang captcha">
+                                <i class="fas fa-rotate-right"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn-login">Login</button>
@@ -226,6 +257,7 @@
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('captcha-question').textContent = data;
+                    document.getElementById('captcha').value = '';
                 });
         }
         loadCaptcha();

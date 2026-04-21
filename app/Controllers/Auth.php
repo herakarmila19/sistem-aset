@@ -19,12 +19,12 @@ class Auth extends BaseController
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
         $captcha = trim((string) $this->request->getPost('captcha'));
-        $expectedCaptcha = session('captcha');
+        $expectedCaptcha = (string) session('captcha');
 
         if (
-            $expectedCaptcha === null
-            || !is_numeric($captcha)
-            || (int) $captcha !== (int) $expectedCaptcha
+            $expectedCaptcha === ''
+            || !ctype_digit($captcha)
+            || !hash_equals($expectedCaptcha, $captcha)
         ) {
             return redirect()->back()->with('error', 'Captcha salah');
         }
@@ -48,36 +48,9 @@ class Auth extends BaseController
 
     public function captcha()
     {
-        $operations = ['+', '-', '*', '/'];
-        $operation = $operations[array_rand($operations)];
-        $num1 = random_int(1, 20);
-        $num2 = random_int(1, 20);
-
-        switch ($operation) {
-            case '-':
-                if ($num1 < $num2) {
-                    [$num1, $num2] = [$num2, $num1];
-                }
-                $answer = $num1 - $num2;
-                $question = "$num1 - $num2 = ?";
-                break;
-            case '*':
-                $answer = $num1 * $num2;
-                $question = "$num1 × $num2 = ?";
-                break;
-            case '/':
-                $num2 = random_int(1, 10);
-                $answer = random_int(1, 10);
-                $num1 = $num2 * $answer;
-                $question = "$num1 ÷ $num2 = ?";
-                break;
-            default:
-                $answer = $num1 + $num2;
-                $question = "$num1 + $num2 = ?";
-                break;
-        }
+        $answer = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
         session()->set('captcha', $answer);
-        return $question;
+        return $answer;
     }
 }
