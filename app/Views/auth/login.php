@@ -169,7 +169,7 @@
                     </div>
                 <?php endif; ?>
                 
-                <form action="/login" method="post">
+                <form action="<?= site_url('login') ?>" method="post">
                     <div class="form-group">
                         <label for="username" class="form-label"><i class="fas fa-user"></i> Username</label>
                         <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan username" required>
@@ -197,7 +197,7 @@
     
     <script>
         function loadCaptcha() {
-            fetch('/captcha')
+            fetch('<?= site_url('captcha') ?>')
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('captcha-question').textContent = data;
