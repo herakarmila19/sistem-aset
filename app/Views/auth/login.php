@@ -13,8 +13,12 @@
             box-sizing: border-box;
         }
 
+        html,
         body {
-            background: #eceff3;
+            background: #f1f3f5;
+        }
+
+        body {
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -48,7 +52,7 @@
         }
 
         .login-header {
-            background: white;
+            background: #ffffff;
             color: #1f2937;
             padding: 24px 30px;
             border-bottom: 1px solid #eef0f3;
@@ -56,7 +60,7 @@
 
         .header-brand {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 12px;
         }
 
