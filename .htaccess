@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /sistem-aset/
+    
+    # Redirect to public folder for all requests
+    RewriteCond %{REQUEST_URI} !^/sistem-aset/public/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ /sistem-aset/public/$1 [L]
+</IfModule>

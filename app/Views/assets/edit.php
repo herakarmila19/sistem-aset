@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Barang - Sistem Aset</title>
+    <title>Edit Barang - Sistem Aset</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -68,6 +68,20 @@
             border-color: #667eea;
             box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.1);
             outline: none;
+        }
+        
+        .current-image {
+            max-width: 150px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .image-section {
+            background: #f5f7fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
         
         .file-input-wrapper {
@@ -151,12 +165,6 @@
             background: #d0d0d0;
             color: #333;
         }
-        
-        .form-text-info {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
     </style>
 </head>
 <body>
@@ -177,20 +185,20 @@
     
     <div class="container">
         <div class="form-card">
-            <h2><i class="fas fa-plus"></i> Tambah Barang Baru</h2>
+            <h2><i class="fas fa-edit"></i> Edit Barang</h2>
             
-            <form action="/assets/store" method="post" enctype="multipart/form-data">
+            <form action="/assets/<?= $asset['id'] ?>/update" method="post" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="nama_barang" class="form-label">Nama Barang <span style="color: red;">*</span></label>
-                            <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Contoh: Kamera DSLR" required>
+                            <input type="text" class="form-control" id="nama_barang" name="nama_barang" value="<?= $asset['nama_barang'] ?>" required>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="merk_barang" class="form-label">Merk Barang</label>
-                            <input type="text" class="form-control" id="merk_barang" name="merk_barang" placeholder="Contoh: Canon">
+                            <input type="text" class="form-control" id="merk_barang" name="merk_barang" value="<?= $asset['merk_barang'] ?? '' ?>">
                         </div>
                     </div>
                 </div>
@@ -202,7 +210,7 @@
                             <select class="form-select" id="tahun_pengadaan" name="tahun_pengadaan">
                                 <option value="">-- Pilih Tahun --</option>
                                 <?php foreach (array_reverse($years ?? []) as $year): ?>
-                                    <option value="<?= $year ?>"><?= $year ?></option>
+                                    <option value="<?= $year ?>" <?= $asset['tahun_pengadaan'] == $year ? 'selected' : '' ?>><?= $year ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -212,8 +220,8 @@
                             <label for="jenis_aset" class="form-label">Jenis Aset <span style="color: red;">*</span></label>
                             <select class="form-select" id="jenis_aset" name="jenis_aset" required>
                                 <option value="">-- Pilih Jenis --</option>
-                                <option value="aset">Aset</option>
-                                <option value="non_aset">Non Aset</option>
+                                <option value="aset" <?= $asset['jenis_aset'] == 'aset' ? 'selected' : '' ?>>Aset</option>
+                                <option value="non_aset" <?= $asset['jenis_aset'] == 'non_aset' ? 'selected' : '' ?>>Non Aset</option>
                             </select>
                         </div>
                     </div>
@@ -225,36 +233,47 @@
                             <label for="kondisi" class="form-label">Kondisi Barang <span style="color: red;">*</span></label>
                             <select class="form-select" id="kondisi" name="kondisi" required>
                                 <option value="">-- Pilih Kondisi --</option>
-                                <option value="baik">Baik</option>
-                                <option value="rusak_ringan">Rusak Ringan</option>
-                                <option value="rusak_berat">Rusak Berat</option>
+                                <option value="baik" <?= $asset['kondisi'] == 'baik' ? 'selected' : '' ?>>Baik</option>
+                                <option value="rusak_ringan" <?= $asset['kondisi'] == 'rusak_ringan' ? 'selected' : '' ?>>Rusak Ringan</option>
+                                <option value="rusak_berat" <?= $asset['kondisi'] == 'rusak_berat' ? 'selected' : '' ?>>Rusak Berat</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="status" class="form-label">Status</label>
-                            <input type="text" class="form-control" id="status" name="status" value="Ada" disabled>
-                            <small class="form-text-info"><i class="fas fa-info-circle"></i> Status otomatis diisi dengan "Ada"</small>
+                            <select class="form-select" id="status" name="status">
+                                <option value="ada" <?= $asset['status'] == 'ada' ? 'selected' : '' ?>>Ada</option>
+                                <option value="dipinjam" <?= $asset['status'] == 'dipinjam' ? 'selected' : '' ?>>Dipinjam</option>
+                                <option value="hilang" <?= $asset['status'] == 'hilang' ? 'selected' : '' ?>>Hilang</option>
+                            </select>
                         </div>
                     </div>
                 </div>
                 
                 <div class="form-group">
                     <label for="foto" class="form-label">Foto Barang</label>
+                    <div class="image-section">
+                        <?php if ($asset['foto']): ?>
+                            <div>
+                                <label style="font-weight: 600; font-size: 14px; color: #666; margin-bottom: 10px; display: block;">Foto Saat Ini:</label>
+                                <img src="/uploads/<?= $asset['foto'] ?>" alt="<?= $asset['nama_barang'] ?>" class="current-image">
+                            </div>
+                        <?php endif; ?>
+                    </div>
                     <div class="file-input-wrapper">
                         <input type="file" class="form-control" id="foto" name="foto" accept="image/*" onchange="previewImage(event)">
                         <label for="foto" class="file-input-label">
-                            <i class="fas fa-cloud-upload-alt"></i> Klik untuk upload foto atau drag & drop
+                            <i class="fas fa-cloud-upload-alt"></i> Klik untuk mengubah foto (opsional)
                         </label>
                     </div>
                     <img id="preview" class="preview-img" alt="Preview">
-                    <small class="form-text-info">Format: JPG, PNG. Maksimal 5MB</small>
+                    <small style="display: block; color: #666; margin-top: 5px;"><i class="fas fa-info-circle"></i> Format: JPG, PNG. Maksimal 5MB</small>
                 </div>
                 
                 <div class="button-group">
                     <button type="submit" class="btn-submit">
-                        <i class="fas fa-save"></i> Simpan Data Barang
+                        <i class="fas fa-save"></i> Perbarui Data Barang
                     </button>
                     <a href="/assets" class="btn-cancel">
                         <i class="fas fa-times"></i> Batal

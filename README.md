@@ -1,60 +1,203 @@
-# Sistem Aset Berbasis Web
+# Sistem Aset Kantor
 
-Sistem manajemen aset kantor menggunakan CodeIgniter 4.
+Sistem manajemen aset kantor modern menggunakan CodeIgniter 4 dengan antarmuka yang elegan dan responsif.
 
-## Fitur
+## Fitur Utama
 
-- Landing page login admin
-- Login dengan username, password, dan captcha penjumlahan/pengurangan
-- Dashboard setelah login
-- Menu aset untuk mencatat barang (nama, spesifikasi, jenis)
-- Generate QR code otomatis per barang
+✨ **Landing Page Login Admin**
+- Username & Password
+- Captcha aritmatika (penjumlahan/pengurangan) untuk keamanan
+- Desain modern dan responsif
 
-## Setup
+📊 **Dashboard**
+- Menu navigasi yang intuitif
+- Akses mudah ke data barang
 
-1. Pastikan PHP 8.2+, MySQL, Composer terinstall.
+📦 **Manajemen Aset**
+- Tambah data barang dengan informasi lengkap:
+  - Nama barang
+  - Merk/vendor
+  - Tahun pengadaan (pilih tahun)
+  - Foto/gambar barang (upload)
+  - Jenis aset (Aset atau Non Aset)
+  - Kondisi (Baik / Rusak Ringan / Rusak Berat)
+  - Status otomatis (Ada / Dipinjam / Hilang)
 
-2. Clone atau download proyek ini.
+📱 **QR Code Generation**
+- Generate otomatis QR code per barang
+- Untuk tracking dan identifikasi aset
 
-3. Install dependencies:
-   ```
-   composer install
-   ```
+## Persyaratan
 
-4. Buat database MySQL bernama `sistem_aset`.
+- PHP 8.2 atau lebih tinggi
+- MySQL 5.7 atau lebih tinggi
+- Composer
+- Laragon atau web server sejenis
 
-5. Update konfigurasi database di `app/Config/Database.php`:
-   - hostname: localhost
-   - username: root (atau sesuai)
-   - password: (sesuai)
-   - database: sistem_aset
+## Instalasi
 
-6. Jalankan migrasi:
-   ```
-   php spark migrate
-   ```
+### 1. Setup Database
 
-7. Jalankan seeder untuk user admin:
-   ```
-   php spark db:seed UserSeeder
-   ```
+Buat database MySQL baru:
+```bash
+mysql -u root
+```
 
-8. Jalankan server:
-   ```
-   php spark serve
-   ```
+```sql
+CREATE DATABASE sistem_aset CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
 
-9. Akses di browser: http://localhost:8080
+### 2. Clone/Setup Project
 
-## Login
+```bash
+cd c:\laragon\www
+git clone <repository-url> sistem-aset
+cd sistem-aset
+composer install
+```
 
-- Username: admin
-- Password: admin123
+### 3. Konfigurasi Database
+
+Edit file `app/Config/Database.php`:
+```php
+public array $default = [
+    'DSN'      => '',
+    'hostname' => 'localhost',
+    'username' => 'root',
+    'password' => '',
+    'database' => 'sistem_aset',
+    'DBDriver' => 'MySQLi',
+    // ... konfigurasi lainnya
+];
+```
+
+### 4. Migrasi Database
+
+```bash
+php spark migrate
+```
+
+### 5. Seeder Data Admin
+
+```bash
+php spark db:seed UserSeeder
+```
+
+### 6. Jalankan Server
+
+```bash
+php spark serve
+```
+
+Server akan berjalan di: `http://localhost:8080`
+
+## Login Admin
+
+- **Username**: `@Adminaset2026`
+- **Password**: `@Aset2026`
 
 ## Struktur Database
 
-- users: id, username, password, created_at, updated_at
-- assets: id, nama_barang, spesifikasi, jenis_barang, qr_code, created_at, updated_at
+### Tabel `users`
+| Kolom | Tipe | Keterangan |
+|-------|------|-----------|
+| id | INT | Primary Key |
+| username | VARCHAR(100) | Unique |
+| password | VARCHAR(255) | Hashed |
+| created_at | DATETIME | Waktu dibuat |
+| updated_at | DATETIME | Waktu diperbarui |
+
+### Tabel `assets`
+| Kolom | Tipe | Keterangan |
+|-------|------|-----------|
+| id | INT | Primary Key |
+| nama_barang | VARCHAR(255) | Nama aset |
+| merk_barang | VARCHAR(255) | Merk/vendor |
+| tahun_pengadaan | YEAR | Tahun perolehan |
+| foto | VARCHAR(255) | Nama file foto |
+| jenis_aset | ENUM | 'aset' atau 'non_aset' |
+| kondisi | ENUM | 'baik', 'rusak_ringan', 'rusak_berat' |
+| status | ENUM | 'ada', 'dipinjam', 'hilang' |
+| qr_code | VARCHAR(255) | Nama file QR code |
+| created_at | DATETIME | Waktu dibuat |
+| updated_at | DATETIME | Waktu diperbarui |
+
+## Struktur File Penting
+
+```
+sistem-aset/
+├── app/
+│   ├── Controllers/
+│   │   ├── Auth.php           # Controller login
+│   │   ├── Dashboard.php       # Controller dashboard
+│   │   └── Assets.php          # Controller manajemen aset
+│   ├── Models/
+│   │   ├── UserModel.php       # Model user
+│   │   └── AssetModel.php      # Model aset
+│   ├── Views/
+│   │   ├── auth/login.php      # Halaman login
+│   │   ├── dashboard/index.php # Halaman dashboard
+│   │   └── assets/             # View aset
+│   └── Database/
+│       ├── Migrations/         # File migrasi
+│       └── Seeds/              # File seeder
+├── public/
+│   ├── index.php
+│   └── uploads/                # Folder upload foto & QR code
+└── writable/
+    └── logs/                   # Log files
+```
+
+## Penggunaan
+
+### Login
+1. Akses `http://localhost:8080`
+2. Masukkan username: `@Adminaset2026`
+3. Masukkan password: `@Aset2026`
+4. Jawab captcha aritmatika
+5. Klik Login
+
+### Menambah Barang
+1. Dari dashboard, klik "Tambah Barang"
+2. Isi form dengan informasi barang:
+   - Nama barang (wajib)
+   - Merk barang
+   - Tahun pengadaan
+   - Upload foto
+   - Pilih jenis aset
+   - Pilih kondisi
+3. Klik "Simpan Data Barang"
+4. QR code akan otomatis di-generate
+
+### Melihat Data Barang
+1. Klik menu "Data Barang"
+2. Lihat semua aset dalam bentuk kartu
+3. Klik "Lihat" untuk detail lengkap
+
+## Fitur Keamanan
+
+- ✅ Password di-hash dengan bcrypt
+- ✅ Captcha untuk mencegah brute force
+- ✅ Session validation
+- ✅ CSRF protection (built-in CodeIgniter)
+
+## Troubleshooting
+
+### Error: Access denied for user
+**Solusi**: Pastikan kredensial database sudah benar di `app/Config/Database.php`
+
+### Error: Table not found
+**Solusi**: Jalankan migrasi: `php spark migrate`
+
+### Foto tidak tampil
+**Solusi**: Pastikan folder `public/uploads/` ada dan writable
+
+### QR Code error
+**Solusi**: Pastikan `endroid/qr-code` terinstall: `composer require endroid/qr-code`
+
+## Developer
+
+Dikembangkan dengan ❤️ menggunakan CodeIgniter 4
 > - The end of life date for PHP 7.4 was November 28, 2022.
 > - The end of life date for PHP 8.0 was November 26, 2023.
 > - The end of life date for PHP 8.1 was December 31, 2025.

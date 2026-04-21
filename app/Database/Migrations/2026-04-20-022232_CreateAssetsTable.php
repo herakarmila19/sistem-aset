@@ -19,13 +19,34 @@ class CreateAssetsTable extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
             ],
-            'spesifikasi' => [
-                'type' => 'TEXT',
-                'null' => true,
-            ],
-            'jenis_barang' => [
+            'merk_barang' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '255',
+                'null'       => true,
+            ],
+            'tahun_pengadaan' => [
+                'type'       => 'YEAR',
+                'null'       => true,
+            ],
+            'foto' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
+                'null'       => true,
+            ],
+            'jenis_aset' => [
+                'type'       => 'ENUM',
+                'constraint' => ['non_aset', 'aset'],
+                'default'    => 'aset',
+            ],
+            'kondisi' => [
+                'type'       => 'ENUM',
+                'constraint' => ['baik', 'rusak_ringan', 'rusak_berat'],
+                'default'    => 'baik',
+            ],
+            'status' => [
+                'type'       => 'ENUM',
+                'constraint' => ['ada', 'dipinjam', 'hilang'],
+                'default'    => 'ada',
             ],
             'qr_code' => [
                 'type'       => 'VARCHAR',

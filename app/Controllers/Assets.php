@@ -25,7 +25,9 @@ class Assets extends BaseController
         if (!session('user_id')) {
             return redirect()->to('/');
         }
-        return view('assets/create');
+        $tahunSekarang = date('Y');
+        $data['years'] = range($tahunSekarang - 20, $tahunSekarang);
+        return view('assets/create', $data);
     }
 
     public function store()
@@ -33,17 +35,31 @@ class Assets extends BaseController
         if (!session('user_id')) {
             return redirect()->to('/');
         }
+        
+        $file = $this->request->getFile('foto');
+        $fotoName = null;
+        
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName();
+            $file->move(FCPATH . 'uploads', $newName);
+            $fotoName = $newName;
+        }
+        
         $assetModel = new AssetModel();
         $data = [
             'nama_barang' => $this->request->getPost('nama_barang'),
-            'spesifikasi' => $this->request->getPost('spesifikasi'),
-            'jenis_barang' => $this->request->getPost('jenis_barang'),
+            'merk_barang' => $this->request->getPost('merk_barang'),
+            'tahun_pengadaan' => $this->request->getPost('tahun_pengadaan'),
+            'foto' => $fotoName,
+            'jenis_aset' => $this->request->getPost('jenis_aset'),
+            'kondisi' => $this->request->getPost('kondisi'),
+            'status' => 'ada',
         ];
         $assetModel->save($data);
         $id = $assetModel->getInsertID();
 
         // Generate QR code
-        $qrCode = QrCode::create($id);
+        $qrCode = QrCode::create((string)$id);
         $writer = new PngWriter();
         $result = $writer->write($qrCode);
         $fileName = 'qr_' . $id . '.png';
@@ -53,7 +69,7 @@ class Assets extends BaseController
         // Update asset with QR path
         $assetModel->update($id, ['qr_code' => $fileName]);
 
-        return redirect()->to('/assets');
+        return redirect()->to('/assets')->with('success', 'Barang berhasil ditambahkan');
     }
 
     public function show($id)
@@ -64,5 +80,77 @@ class Assets extends BaseController
         $assetModel = new AssetModel();
         $data['asset'] = $assetModel->find($id);
         return view('assets/show', $data);
+    }
+
+    public function edit($id)
+    {
+        if (!session('user_id')) {
+            return redirect()->to('/');
+        }
+        $assetModel = new AssetModel();
+        $data['asset'] = $assetModel->find($id);
+        $tahunSekarang = date('Y');
+        $data['years'] = range($tahunSekarang - 20, $tahunSekarang);
+        return view('assets/edit', $data);
+    }
+
+    public function update($id)
+    {
+        if (!session('user_id')) {
+            return redirect()->to('/');
+        }
+        
+        $assetModel = new AssetModel();
+        $asset = $assetModel->find($id);
+        
+        $file = $this->request->getFile('foto');
+        $fotoName = $asset['foto'];
+        
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            // Hapus foto lama jika ada
+            if ($asset['foto'] && file_exists(FCPATH . 'uploads/' . $asset['foto'])) {
+                unlink(FCPATH . 'uploads/' . $asset['foto']);
+            }
+            $newName = $file->getRandomName();
+            $file->move(FCPATH . 'uploads', $newName);
+            $fotoName = $newName;
+        }
+        
+        $data = [
+            'nama_barang' => $this->request->getPost('nama_barang'),
+            'merk_barang' => $this->request->getPost('merk_barang'),
+            'tahun_pengadaan' => $this->request->getPost('tahun_pengadaan'),
+            'foto' => $fotoName,
+            'jenis_aset' => $this->request->getPost('jenis_aset'),
+            'kondisi' => $this->request->getPost('kondisi'),
+            'status' => $this->request->getPost('status'),
+        ];
+        $assetModel->update($id, $data);
+
+        return redirect()->to('/assets')->with('success', 'Barang berhasil diperbarui');
+    }
+
+    public function delete($id)
+    {
+        if (!session('user_id')) {
+            return redirect()->to('/');
+        }
+        
+        $assetModel = new AssetModel();
+        $asset = $assetModel->find($id);
+        
+        // Hapus foto
+        if ($asset['foto'] && file_exists(FCPATH . 'uploads/' . $asset['foto'])) {
+            unlink(FCPATH . 'uploads/' . $asset['foto']);
+        }
+        
+        // Hapus QR code
+        if ($asset['qr_code'] && file_exists(FCPATH . 'uploads/' . $asset['qr_code'])) {
+            unlink(FCPATH . 'uploads/' . $asset['qr_code']);
+        }
+        
+        $assetModel->delete($id);
+
+        return redirect()->to('/assets')->with('success', 'Barang berhasil dihapus');
     }
 }

@@ -14,3 +14,6 @@ $routes->get('/assets', 'Assets::index');
 $routes->get('/assets/create', 'Assets::create');
 $routes->post('/assets/store', 'Assets::store');
 $routes->get('/assets/(:num)', 'Assets::show/$1');
+$routes->get('/assets/(:num)/edit', 'Assets::edit/$1');
+$routes->post('/assets/(:num)/update', 'Assets::update/$1');
+$routes->get('/assets/(:num)/delete', 'Assets::delete/$1');
