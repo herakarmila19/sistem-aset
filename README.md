@@ -6,7 +6,7 @@ Sistem manajemen aset kantor modern menggunakan CodeIgniter 4 dengan antarmuka y
 
 ✨ **Landing Page Login Admin**
 - Username & Password
-- Captcha aritmatika (penjumlahan/pengurangan) untuk keamanan
+- Captcha numerik acak 6 digit untuk keamanan login
 - Desain modern dan responsif
 
 📊 **Dashboard**
@@ -70,6 +70,16 @@ public array $default = [
     // ... konfigurasi lainnya
 ];
 ```
+
+### 3a. Konfigurasi Base URL
+
+Edit file `.env`, lalu pastikan nilainya seperti ini:
+
+```ini
+app.baseURL = 'http://localhost/sistem-aset/'
+```
+
+Gunakan URL di atas (tanpa `/public/`) agar routing sesuai struktur project.
 
 ### 4. Migrasi Database
 
