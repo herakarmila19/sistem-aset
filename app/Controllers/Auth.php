@@ -18,10 +18,14 @@ class Auth extends BaseController
         $userModel = new UserModel();
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
-        $captcha = $this->request->getPost('captcha');
+        $captcha = trim((string) $this->request->getPost('captcha'));
+        $expectedCaptcha = session('captcha');
 
-        // Simple captcha check
-        if ($captcha != session('captcha')) {
+        if (
+            $expectedCaptcha === null
+            || !is_numeric($captcha)
+            || (int) $captcha !== (int) $expectedCaptcha
+        ) {
             return redirect()->back()->with('error', 'Captcha salah');
         }
 
@@ -44,16 +48,35 @@ class Auth extends BaseController
 
     public function captcha()
     {
-        $num1 = rand(1, 10);
-        $num2 = rand(1, 10);
-        $operation = rand(0, 1) ? '+' : '-';
-        if ($operation == '-' && $num1 < $num2) {
-            $temp = $num1;
-            $num1 = $num2;
-            $num2 = $temp;
+        $operations = ['+', '-', '*', '/'];
+        $operation = $operations[array_rand($operations)];
+        $num1 = random_int(1, 20);
+        $num2 = random_int(1, 20);
+
+        switch ($operation) {
+            case '-':
+                if ($num1 < $num2) {
+                    [$num1, $num2] = [$num2, $num1];
+                }
+                $answer = $num1 - $num2;
+                $question = "$num1 - $num2 = ?";
+                break;
+            case '*':
+                $answer = $num1 * $num2;
+                $question = "$num1 × $num2 = ?";
+                break;
+            case '/':
+                $num2 = random_int(1, 10);
+                $answer = random_int(1, 10);
+                $num1 = $num2 * $answer;
+                $question = "$num1 ÷ $num2 = ?";
+                break;
+            default:
+                $answer = $num1 + $num2;
+                $question = "$num1 + $num2 = ?";
+                break;
         }
-        $question = "$num1 $operation $num2";
-        $answer = $operation == '+' ? $num1 + $num2 : $num1 - $num2;
+
         session()->set('captcha', $answer);
         return $question;
     }
