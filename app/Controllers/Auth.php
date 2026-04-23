@@ -18,7 +18,7 @@ class Auth extends BaseController
         $userModel = new UserModel();
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
-        $captcha = trim((string) $this->request->getPost('captcha'));
+        $captcha = trim((string) ($this->request->getPost('captcha_confirm') ?? $this->request->getPost('captcha')));
         $expectedCaptcha = session('captcha');
 
         if (
@@ -48,6 +48,7 @@ class Auth extends BaseController
 
     public function captcha()
     {
+<<<<<<< HEAD
         // Generate random 6-digit captcha code
         $captchaCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
         session()->set('captcha', $captchaCode);
@@ -55,5 +56,11 @@ class Auth extends BaseController
         // Set header untuk plain text response
         header('Content-Type: text/plain');
         return $captchaCode;
+=======
+        $code = (string) random_int(100000, 999999);
+
+        session()->set('captcha', $code);
+        return $code;
+>>>>>>> 2dcfdaf5adf4aef9b0c77d0d5a12b2eb4b0afbc6
     }
 }

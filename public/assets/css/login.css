@@ -36,6 +36,10 @@ body {
         opacity: 0;
         transform: translateY(30px);
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2dcfdaf5adf4aef9b0c77d0d5a12b2eb4b0afbc6
     to {
         opacity: 1;
         transform: translateY(0);
@@ -98,7 +102,10 @@ body {
     padding: 12px 15px;
     font-size: 14px;
     transition: all 0.3s ease;
+<<<<<<< HEAD
     width: 100%;
+=======
+>>>>>>> 2dcfdaf5adf4aef9b0c77d0d5a12b2eb4b0afbc6
 }
 
 .form-control:focus {
@@ -107,6 +114,7 @@ body {
     outline: none;
 }
 
+<<<<<<< HEAD
 .form-control:disabled {
     background-color: #e9ecef;
     color: #6c757d;
@@ -138,6 +146,29 @@ body {
     font-weight: 700;
     color: #667eea;
     margin-bottom: 10px;
+=======
+.captcha-box {
+    margin-bottom: 20px;
+}
+
+.captcha-input {
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 3px;
+    background: #f5f7fa;
+}
+
+.captcha-confirm {
+    text-align: center;
+}
+
+.captcha-icon {
+    border: 2px solid #e0e0e0;
+    border-left: 0;
+    border-radius: 0 8px 8px 0;
+    background: #f5f7fa;
+    color: #667eea;
+>>>>>>> 2dcfdaf5adf4aef9b0c77d0d5a12b2eb4b0afbc6
 }
 
 .captcha-refresh {
@@ -149,6 +180,7 @@ body {
     cursor: pointer;
     padding: 0;
     margin-top: 8px;
+<<<<<<< HEAD
     margin-left: 5px;
 }
 
@@ -185,6 +217,8 @@ body {
 .captcha-icon:hover {
     border-color: #667eea;
     background-color: #f5f7fa;
+=======
+>>>>>>> 2dcfdaf5adf4aef9b0c77d0d5a12b2eb4b0afbc6
 }
 
 .btn-login {
@@ -216,5 +250,8 @@ body {
 .alert-danger {
     background-color: #fee;
     color: #c33;
+<<<<<<< HEAD
     padding: 12px 15px;
+=======
+>>>>>>> 2dcfdaf5adf4aef9b0c77d0d5a12b2eb4b0afbc6
 }
