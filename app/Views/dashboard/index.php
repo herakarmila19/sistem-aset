@@ -1,149 +1,186 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Sistem Aset</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 20px;
-        }
-        
-        .nav-link {
-            color: rgba(255, 255, 255, 0.85) !important;
-            transition: all 0.3s ease;
-            margin-left: 15px;
-        }
-        
-        .nav-link:hover {
-            color: white !important;
-            transform: translateY(-2px);
-        }
-        
-        .dashboard-welcome {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 15px;
-            margin-top: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .dashboard-welcome h1 {
-            font-size: 32px;
-            font-weight: 700;
-        }
-        
-        .dashboard-welcome p {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-        
-        .menu-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            margin-top: 30px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .menu-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-        }
-        
-        .menu-card i {
-            font-size: 40px;
-            color: #667eea;
-            margin-bottom: 15px;
-        }
-        
-        .menu-card h3 {
-            color: #333;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        
-        .menu-card p {
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .menu-card a {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .menu-card a:hover {
-            color: white;
-            transform: scale(1.05);
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/dashboard"><i class="fas fa-box"></i> Sistem Aset</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="navbar-nav ms-auto">
-                    <a class="nav-link" href="/assets"><i class="fas fa-list"></i> Data Barang</a>
-                    <span class="nav-link">Hai, <?= session('username') ?></span>
-                    <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+<?= $this->extend('layouts/app') ?>
+
+<?= $this->section('content') ?>
+
+<div class="container-fluid">
+    <div class="row g-3">
+        <!-- Total Barang -->
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card stat-card-primary">
+                <div class="stat-icon">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Total Barang</p>
+                    <h3 class="stat-value"><?= $total_barang ?></h3>
                 </div>
             </div>
         </div>
-    </nav>
-    
-    <div class="container">
-        <div class="dashboard-welcome">
-            <h1><i class="fas fa-waves"></i> Selamat Datang di Dashboard</h1>
-            <p>Kelola aset kantor Anda dengan mudah dan efisien</p>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-6">
-                <div class="menu-card">
-                    <i class="fas fa-plus-circle"></i>
-                    <h3>Tambah Barang</h3>
-                    <p>Tambahkan barang baru ke sistem aset</p>
-                    <a href="/assets/create">Mulai Sekarang</a>
+
+        <!-- Barang Dipinjam -->
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card stat-card-warning">
+                <div class="stat-icon">
+                    <i class="fas fa-hand-holding"></i>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Barang Dipinjam</p>
+                    <h3 class="stat-value"><?= $barang_dipinjam ?></h3>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="menu-card">
-                    <i class="fas fa-inbox"></i>
-                    <h3>Lihat Semua Barang</h3>
-                    <p>Lihat daftar lengkap semua aset kantor</p>
-                    <a href="/assets">Lihat Data</a>
+        </div>
+
+        <!-- Barang Hilang -->
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card stat-card-danger">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Barang Hilang</p>
+                    <h3 class="stat-value"><?= $barang_hilang ?></h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barang Tersedia -->
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card stat-card-success">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Barang Tersedia</p>
+                    <h3 class="stat-value"><?= $barang_ada ?></h3>
                 </div>
             </div>
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+    <!-- Quick Action -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="quick-action">
+                <h5>Aksi Cepat</h5>
+                <a href="<?= site_url('assets/create') ?>" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Tambah Barang Baru
+                </a>
+                <a href="<?= site_url('assets') ?>" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-list"></i> Lihat Semua Barang
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        flex-shrink: 0;
+    }
+
+    .stat-card-primary .stat-icon {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .stat-card-warning .stat-icon {
+        background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
+        color: white;
+    }
+
+    .stat-card-danger .stat-icon {
+        background: linear-gradient(135deg, #FF6B6B 0%, #EE5A52 100%);
+        color: white;
+    }
+
+    .stat-card-success .stat-icon {
+        background: linear-gradient(135deg, #2DBA54 0%, #25A246 100%);
+        color: white;
+    }
+
+    .stat-content {
+        flex: 1;
+    }
+
+    .stat-label {
+        font-size: 12px;
+        color: #8896a3;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+        font-size: 32px;
+        font-weight: 700;
+        margin: 0;
+        color: #1f2937;
+    }
+
+    .quick-action {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .quick-action h5 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: #1f2937;
+    }
+
+    .quick-action .btn {
+        margin-right: 10px;
+        margin-bottom: 10px;
+        border-radius: 6px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #5568d3 0%, #6a3e8e 100%);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: #e9ecef;
+        border: none;
+        color: #495057;
+    }
+
+    .btn-secondary:hover {
+        background: #dee2e6;
+        color: #495057;
+    }
+</style>
+
+<?= $this->endSection() ?>

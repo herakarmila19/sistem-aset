@@ -1,12 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Barang - Sistem Aset</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
+<?= $this->extend('layouts/app') ?>
+
+<?= $this->section('content') ?>
+
+<div class="assets-container">
+    <div class="assets-header mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Daftar Barang</h2>
+            <a href="<?= site_url('assets/create') ?>" class="btn btn-primary btn-add-new">
+                <i class="fas fa-plus"></i> Tambah Barang Baru
+            </a>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <?php if (!empty($assets)): ?>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama Barang</th>
+                        <th>Merk</th>
+                        <th>Tahun</th>
+                        <th>Jenis</th>
+                        <th>Status</th>
+                        <th>Kondisi</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($assets as $asset): ?>
+                        <tr>
+                            <td><strong>#<?= $asset['id'] ?></strong></td>
+                            <td><?= $asset['nama_barang'] ?></td>
+                            <td><?= $asset['merk_barang'] ?? '-' ?></td>
+                            <td><?= $asset['tahun_pengadaan'] ?? '-' ?></td>
+                            <td><span class="badge bg-secondary"><?= ucfirst(str_replace('_', ' ', $asset['jenis_aset'])) ?></span></td>
+                            <td>
+                                <?php 
+                                $statusClass = match($asset['status']) {
+                                    'ada' => 'success',
+                                    'dipinjam' => 'warning',
+                                    'hilang' => 'danger',
+                                    default => 'secondary'
+                                };
+                                ?>
+                                <span class="badge bg-<?= $statusClass ?>"><?= ucfirst(str_replace('_', ' ', $asset['status'])) ?></span>
+                            </td>
+                            <td>
+                                <?php 
+                                $kondisiClass = match($asset['kondisi']) {
+                                    'baik' => 'success',
+                                    'rusak_ringan' => 'warning',
+                                    'rusak_berat' => 'danger',
+                                    default => 'secondary'
+                                };
+                                ?>
+                                <span class="badge bg-<?= $kondisiClass ?>"><?= ucfirst(str_replace('_', ' ', $asset['kondisi'])) ?></span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="<?= site_url('assets/' . $asset['id']) ?>" class="btn btn-sm btn-info" title="Lihat Detail">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="<?= site_url('assets/' . $asset['id'] . '/edit') ?>" class="btn btn-sm btn-warning" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="<?= site_url('assets/' . $asset['id'] . '/delete') ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus barang ini?')" title="Hapus">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php else: ?>
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-inbox"></i>
+            </div>
+            <h3>Belum Ada Data Barang</h3>
+            <p>Mulai dengan menambahkan barang pertama Anda ke sistem</p>
+            <a href="<?= site_url('assets/create') ?>" class="btn btn-primary mt-3">
+                <i class="fas fa-plus"></i> Tambah Barang Pertama
+            </a>
+        </div>
+    <?php endif; ?>
+</div>
+
+<style>
         body {
             background-color: #f8f9fa;
         }

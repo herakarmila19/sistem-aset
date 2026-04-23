@@ -7,8 +7,8 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Auth::index');
 $routes->post('/login', 'Auth::login');
+$routes->get('/login/captcha', 'Auth::captcha');
 $routes->get('/logout', 'Auth::logout');
-$routes->get('/captcha', 'Auth::captcha');
 $routes->get('/dashboard', 'Dashboard::index');
 $routes->get('/assets', 'Assets::index');
 $routes->get('/assets/create', 'Assets::create');
