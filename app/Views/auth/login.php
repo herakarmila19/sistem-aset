@@ -38,7 +38,6 @@
                         <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password" required>
                     </div>
 
-<<<<<<< HEAD
                     <div class="form-group">
                         <label class="form-label"><i class="fas fa-barcode"></i> Captcha</label>
                         <input type="text" class="form-control text-center" id="captcha_display" disabled="" style="margin-bottom: 10px; font-weight: bold; font-size: 20px; letter-spacing: 3px;">
@@ -48,19 +47,6 @@
                                 <span class="fas fa-redo"></span>
                             </div>
                         </div>
-=======
-                    <div class="captcha-box">
-                        <label for="captcha-confirm" class="form-label">Captcha</label>
-                        <div class="input-group">
-                            <input type="text" id="captcha-code" name="captcha_code" hidden>
-                            <input type="text" id="captcha-display" class="form-control captcha-input" disabled>
-                            <input type="number" class="form-control captcha-confirm" id="captcha-confirm" name="captcha_confirm" placeholder="Isi captcha" required>
-                            <span class="input-group-text captcha-icon">
-                                <i class="fas fa-barcode"></i>
-                            </span>
-                        </div>
-                        <button type="button" class="captcha-refresh" id="captcha-refresh">Muat ulang captcha</button>
->>>>>>> 2dcfdaf5adf4aef9b0c77d0d5a12b2eb4b0afbc6
                     </div>
 
                     <button type="submit" class="btn-login">Login</button>
@@ -74,7 +60,7 @@
             fetch('<?= site_url('login/captcha') ?>', { cache: 'no-store' })
                 .then(response => response.text())
                 .then(data => {
-
+                    document.getElementById('captcha_display').value = data;
                 });
         }
 
