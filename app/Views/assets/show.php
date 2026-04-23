@@ -86,7 +86,7 @@
             color: #856404;
         }
         
-        .badge-hilang {
+        .badge-barang-belum-ditemukan {
             background-color: #f8d7da;
             color: #721c24;
         }
@@ -220,6 +220,17 @@
                     <div class="qr-code-section">
                         <h3>QR Code</h3>
                         <img src="<?= base_url('uploads/' . $asset['qr_code']) ?>" alt="QR Code" style="width: 250px; height: 250px;">
+                        <div class="d-flex justify-content-center gap-2 mt-3 flex-wrap">
+                            <a href="<?= base_url('uploads/' . $asset['qr_code']) ?>" download class="btn btn-success">
+                                <i class="fas fa-download"></i> Download QR
+                            </a>
+                            <button type="button" class="btn btn-secondary" onclick="window.print()">
+                                <i class="fas fa-print"></i> Print QR
+                            </button>
+                            <a href="<?= site_url('scan/' . $asset['id']) ?>" class="btn btn-primary" target="_blank">
+                                <i class="fas fa-link"></i> Buka Halaman Scan
+                            </a>
+                        </div>
                     </div>
                 <?php endif; ?>
                 

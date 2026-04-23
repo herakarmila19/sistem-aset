@@ -9,6 +9,8 @@ $routes->get('/', 'Auth::index');
 $routes->post('login', 'Auth::login');
 $routes->get('login/captcha', 'Auth::captcha');
 $routes->get('logout', 'Auth::logout');
+$routes->get('scan/(:num)', 'Assets::scan/$1');
+$routes->post('scan/(:num)/borrow', 'Assets::borrow/$1');
 
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('dashboard', 'Dashboard::index');

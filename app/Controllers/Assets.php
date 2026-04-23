@@ -4,11 +4,33 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\AssetModel;
+use App\Models\AssetQrCodeModel;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 
 class Assets extends BaseController
 {
+    private function generateQrCodeForAsset(int $id): array
+    {
+        $qrUrl = site_url('scan/' . $id);
+        $qrCode = new QrCode(data: $qrUrl);
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+        $fileName = 'qr_' . $id . '.png';
+        $uploadDir = FCPATH . 'uploads/';
+
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $result->saveToFile($uploadDir . $fileName);
+
+        return [
+            'path' => $fileName,
+            'url' => $qrUrl,
+        ];
+    }
+
     private function processUploadedImageToWebp(?\CodeIgniter\HTTP\Files\UploadedFile $file, ?string $existingFile = null): ?string
     {
         if (!$file || !$file->isValid() || $file->hasMoved()) {
@@ -141,21 +163,15 @@ class Assets extends BaseController
         $assetModel->insert($data);
         $id = $assetModel->getInsertID();
 
-        // Generate QR code
-        $qrCode = new QrCode(data: (string) $id);
-        $writer = new PngWriter();
-        $result = $writer->write($qrCode);
-        $fileName = 'qr_' . $id . '.png';
-        $uploadDir = FCPATH . 'uploads/';
+        $qrCode = $this->generateQrCodeForAsset((int) $id);
+        $assetModel->update($id, ['qr_code' => $qrCode['path']]);
 
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
-        }
-
-        $result->saveToFile($uploadDir . $fileName);
-
-        // Update asset with QR path
-        $assetModel->update($id, ['qr_code' => $fileName]);
+        $qrCodeModel = new AssetQrCodeModel();
+        $qrCodeModel->save([
+            'asset_id' => $id,
+            'qr_path' => $qrCode['path'],
+            'qr_url' => $qrCode['url'],
+        ]);
 
         return redirect()->to(site_url('barang'))->with('success', 'Barang berhasil ditambahkan');
     }
@@ -171,6 +187,56 @@ class Assets extends BaseController
             return redirect()->to(site_url('barang'))->with('error', 'Data barang tidak ditemukan.');
         }
         return view('assets/show', $data);
+    }
+
+    public function scan($id)
+    {
+        $assetModel = new AssetModel();
+        $data['asset'] = $assetModel->find($id);
+
+        if (!$data['asset']) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Barang tidak ditemukan.');
+        }
+
+        return view('assets/scan', $data);
+    }
+
+    public function borrow($id)
+    {
+        $assetModel = new AssetModel();
+        $asset = $assetModel->find($id);
+
+        if (!$asset) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Barang tidak ditemukan.');
+        }
+
+        if ($asset['status'] === 'dipinjam') {
+            return redirect()->to(site_url('scan/' . $id))->with('error', 'Barang ini sedang dipinjam.');
+        }
+
+        if ($asset['status'] === 'barang_belum_ditemukan') {
+            return redirect()->to(site_url('scan/' . $id))->with('error', 'Barang belum ditemukan, tidak dapat dipinjam.');
+        }
+
+        $rules = [
+            'nama_peminjam' => 'required|min_length[3]|max_length[255]',
+            'keperluan_pinjam' => 'required|min_length[3]|max_length[255]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->to(site_url('scan/' . $id))
+                ->withInput()
+                ->with('error', 'Nama peminjam dan keperluan wajib diisi.');
+        }
+
+        $assetModel->update($id, [
+            'status' => 'dipinjam',
+            'nama_peminjam' => $this->request->getPost('nama_peminjam'),
+            'keperluan_pinjam' => $this->request->getPost('keperluan_pinjam'),
+            'dipinjam_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        return redirect()->to(site_url('scan/' . $id))->with('success', 'Berhasil meminjam barang. Status barang kini dipinjam.');
     }
 
     public function edit($id)
@@ -208,7 +274,7 @@ class Assets extends BaseController
             'tahun_pengadaan' => 'permit_empty|integer',
             'jenis_aset' => 'required|in_list[aset,non_aset]',
             'kondisi' => 'required|in_list[baik,rusak_ringan,rusak_berat]',
-            'status' => 'required|in_list[ada,dipinjam,hilang]',
+            'status' => 'required|in_list[ada,dipinjam,barang_belum_ditemukan]',
             'foto' => 'permit_empty|is_image[foto]|max_size[foto,1024]',
         ];
 
