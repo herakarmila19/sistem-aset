@@ -142,12 +142,17 @@ class Assets extends BaseController
         $id = $assetModel->getInsertID();
 
         // Generate QR code
-        $qrCode = QrCode::create((string)$id);
+        $qrCode = new QrCode(data: (string) $id);
         $writer = new PngWriter();
         $result = $writer->write($qrCode);
         $fileName = 'qr_' . $id . '.png';
-        $filePath = FCPATH . 'uploads/' . $fileName;
-        $result->saveToFile($filePath);
+        $uploadDir = FCPATH . 'uploads/';
+
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $result->saveToFile($uploadDir . $fileName);
 
         // Update asset with QR path
         $assetModel->update($id, ['qr_code' => $fileName]);
