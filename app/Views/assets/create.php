@@ -164,14 +164,14 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/dashboard"><i class="fas fa-box"></i> Sistem Aset</a>
+            <a class="navbar-brand" href="<?= site_url('dashboard') ?>"><i class="fas fa-box"></i> Sistem Aset</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <div class="navbar-nav ms-auto">
-                    <a class="nav-link" href="/barang"><i class="fas fa-list"></i> Data Barang</a>
-                    <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    <a class="nav-link" href="<?= site_url('barang') ?>"><i class="fas fa-list"></i> Data Barang</a>
+                    <a class="nav-link" href="<?= site_url('logout') ?>"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 </div>
             </div>
         </div>
@@ -275,7 +275,7 @@
                     <button type="submit" class="btn-submit">
                         <i class="fas fa-save"></i> Simpan Data Barang
                     </button>
-                    <a href="/barang" class="btn-cancel">
+                    <a href="<?= site_url('barang') ?>" class="btn-cancel">
                         <i class="fas fa-times"></i> Batal
                     </a>
                 </div>

@@ -43,9 +43,9 @@
                         <input type="text" class="form-control text-center" id="captcha_display" disabled="" style="margin-bottom: 10px; font-weight: bold; font-size: 20px; letter-spacing: 3px;">
                         <div class="captcha-input-row">
                             <input type="text" name="captcha" id="captcha_confirm" class="form-control" placeholder="Masukkan kode di atas" inputmode="numeric" required="">
-                            <div class="captcha-icon" id="captcha-refresh" title="Refresh Captcha">
-                                <span class="fas fa-redo"></span>
-                            </div>
+                            <button type="button" class="captcha-icon" id="captcha-refresh" title="Refresh Captcha" aria-label="Refresh Captcha">
+                                <span class="fas fa-rotate-right"></span>
+                            </button>
                         </div>
                     </div>
 
@@ -65,7 +65,7 @@
         }
 
         // Load captcha on page load
-        window.addEventListener('load', loadCaptcha);
+        window.addEventListener('DOMContentLoaded', loadCaptcha);
 
         // Refresh captcha on icon click
         document.getElementById('captcha-refresh').addEventListener('click', function(e) {
