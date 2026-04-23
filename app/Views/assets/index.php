@@ -64,6 +64,9 @@
                         <td><span class="badge bg-<?= $kondisiClass ?>"><?= esc(ucfirst(str_replace('_', ' ', $asset['kondisi']))) ?></span></td>
                         <td class="text-nowrap">
                             <a href="<?= site_url('barang/' . $asset['id']) ?>" class="btn btn-sm btn-info" title="Lihat Detail"><i class="fas fa-eye"></i></a>
+                            <?php if (!empty($asset['qr_code'])): ?>
+                                <a href="<?= base_url('uploads/' . $asset['qr_code']) ?>" class="btn btn-sm btn-success" title="Download QR" download><i class="fas fa-download"></i></a>
+                            <?php endif; ?>
                             <a href="<?= site_url('barang/' . $asset['id'] . '/edit') ?>" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
                             <a href="<?= site_url('barang/' . $asset['id'] . '/delete') ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus barang ini?')" title="Hapus"><i class="fas fa-trash"></i></a>
                         </td>
