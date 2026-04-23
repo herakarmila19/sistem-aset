@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\AssetModel;
-use CodeIgniter\HTTP\ResponseInterface;
 
 class Dashboard extends BaseController
 {
@@ -13,15 +12,15 @@ class Dashboard extends BaseController
         if (!session('user_id')) {
             return redirect()->to(site_url('/'));
         }
-        
+
         $assetModel = new AssetModel();
-        
-        $data['title'] = 'Dashboard';
-        $data['total_barang'] = $assetModel->countAll();
-        $data['barang_dipinjam'] = $assetModel->where('status', 'dipinjam')->countAllResults();
-        $data['barang_hilang'] = $assetModel->where('status', 'hilang')->countAllResults();
-        $data['barang_ada'] = $assetModel->where('status', 'ada')->countAllResults();
-        
-        return view('dashboard/index', $data);
+
+        return view('dashboard/index', [
+            'title' => 'Dashboard',
+            'total_barang' => $assetModel->countAll(),
+            'barang_dipinjam' => $assetModel->where('status', 'dipinjam')->countAllResults(),
+            'data_barang_tidak_ada' => 0,
+            'barang_tersedia' => $assetModel->where('status', 'tersedia')->countAllResults(),
+        ]);
     }
 }

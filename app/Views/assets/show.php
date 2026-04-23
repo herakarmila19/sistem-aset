@@ -1,242 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Barang - Sistem Aset</title>
+    <title>Detail Barang</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 20px;
-        }
-        
-        .detail-card {
-            background: white;
-            border-radius: 15px;
-            padding: 40px;
-            margin-top: 30px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .detail-card h1 {
-            color: #333;
-            font-weight: 700;
-            margin-bottom: 30px;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 15px;
-        }
-        
-        .detail-image {
-            max-width: 300px;
-            width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .detail-info {
-            background: #f5f7fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .info-row:last-child {
-            border-bottom: none;
-        }
-        
-        .info-label {
-            font-weight: 700;
-            color: #667eea;
-            min-width: 150px;
-        }
-        
-        .badge-status {
-            display: inline-block;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 14px;
-        }
-        
-        .badge-ada {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .badge-dipinjam {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-        
-        .badge-barang-belum-ditemukan {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        
-        .badge-kondisi {
-            display: inline-block;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 14px;
-            margin-left: 10px;
-        }
-        
-        .badge-baik {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .badge-rusak-ringan {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-        
-        .badge-rusak-berat {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        
-        .qr-code-section {
-            background: #f5f7fa;
-            border-radius: 10px;
-            padding: 30px;
-            text-align: center;
-            margin-top: 30px;
-        }
-        
-        .btn-back {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 20px;
-        }
-        
-        .btn-back:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-            color: white;
-        }
-    </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="<?= site_url('dashboard') ?>"><i class="fas fa-box"></i> Sistem Aset</a>
-        </div>
-    </nav>
-    
-    <div class="container">
-        <?php if ($asset): ?>
-            <div class="detail-card">
-                <h1><i class="fas fa-info-circle"></i> Detail Barang</h1>
-                
-                <div class="row">
-                    <div class="col-md-6">
-                        <?php if ($asset['foto']): ?>
-                            <img src="<?= base_url('uploads/' . $asset['foto']) ?>" alt="<?= $asset['nama_barang'] ?>" class="detail-image">
-                        <?php else: ?>
-                            <div class="detail-image" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0;">
-                                <i class="fas fa-image" style="font-size: 80px; color: #ccc;"></i>
-                            </div>
-                        <?php endif; ?>
+<body class="bg-light">
+<div class="container py-4">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h3 class="mb-3"><?= esc($asset['nama_barang']) ?></h3>
+                    <p class="text-muted mb-2"><?= esc($asset['keterangan'] ?: '-') ?></p>
+                    <div class="mb-2"><strong>Status:</strong>
+                        <span class="badge <?= $asset['status'] === 'dipinjam' ? 'bg-warning text-dark' : 'bg-success' ?>">
+                            <?= esc(ucfirst($asset['status'])) ?>
+                        </span>
                     </div>
-                    
-                    <div class="col-md-6">
-                        <div class="detail-info">
-                            <div class="info-row">
-                                <span class="info-label">ID:</span>
-                                <span><?= $asset['id'] ?></span>
-                            </div>
-                            
-                            <div class="info-row">
-                                <span class="info-label">Nama Barang:</span>
-                                <span><?= $asset['nama_barang'] ?></span>
-                            </div>
-
-                            <div class="info-row">
-                                <span class="info-label">Keterangan:</span>
-                                <span><?= $asset['keterangan'] ?: '-' ?></span>
-                            </div>
-                            
-                            <div class="info-row">
-                                <span class="info-label">Merk:</span>
-                                <span><?= $asset['merk_barang'] ?? '-' ?></span>
-                            </div>
-                            
-                            <div class="info-row">
-                                <span class="info-label">Tahun:</span>
-                                <span><?= $asset['tahun_pengadaan'] ?? '-' ?></span>
-                            </div>
-                            
-                            <div class="info-row">
-                                <span class="info-label">Jenis Aset:</span>
-                                <span><?= ucfirst(str_replace('_', ' ', $asset['jenis_aset'])) ?></span>
-                            </div>
-                            
-                            <div class="info-row">
-                                <span class="info-label">Kondisi:</span>
-                                <span class="badge-kondisi badge-<?= str_replace('_', '-', $asset['kondisi']) ?>">
-                                    <?= ucfirst(str_replace('_', ' ', $asset['kondisi'])) ?>
-                                </span>
-                            </div>
-                            
-                            <div class="info-row">
-                                <span class="info-label">Status:</span>
-                                <span class="badge-status badge-<?= $asset['status'] ?>">
-                                    <?= ucfirst(str_replace('_', ' ', $asset['status'])) ?>
-                                </span>
-                            </div>
-                        </div>
+                    <div class="mb-2"><strong>Merk:</strong> <?= esc($asset['merk_barang'] ?: '-') ?></div>
+                    <div class="mb-0"><strong>Tahun:</strong> <?= esc($asset['tahun_pengadaan'] ?: '-') ?></div>
+                    <div class="mt-3">
+                        <a href="<?= site_url('barang') ?>" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Kembali</a>
                     </div>
                 </div>
-                
-                <?php if ($asset['qr_code']): ?>
-                    <div class="qr-code-section">
-                        <h3>QR Code</h3>
-                        <img src="<?= base_url('uploads/' . $asset['qr_code']) ?>" alt="QR Code" style="width: 250px; height: 250px;">
-                        <div class="d-flex justify-content-center gap-2 mt-3 flex-wrap">
-                            <a href="<?= base_url('uploads/' . $asset['qr_code']) ?>" download class="btn btn-success">
-                                <i class="fas fa-download"></i> Download QR
-                            </a>
-                            <button type="button" class="btn btn-secondary" onclick="window.print()">
-                                <i class="fas fa-print"></i> Print QR
-                            </button>
-                            <a href="<?= site_url('scan/' . $asset['id']) ?>" class="btn btn-primary" target="_blank">
-                                <i class="fas fa-link"></i> Buka Halaman Scan
-                            </a>
-                        </div>
-                    </div>
-                <?php endif; ?>
-                
-                <a href="<?= site_url('barang') ?>" class="btn-back">Kembali ke Daftar</a>
             </div>
-        <?php endif; ?>
+
+            <div class="card shadow-sm border-0 mt-3">
+                <div class="card-body p-4">
+                    <?php if (session()->getFlashdata('success')): ?><div class="alert alert-success"><?= esc(session()->getFlashdata('success')) ?></div><?php endif; ?>
+                    <?php if (session()->getFlashdata('error')): ?><div class="alert alert-danger"><?= esc(session()->getFlashdata('error')) ?></div><?php endif; ?>
+
+                    <?php if ($asset['status'] === 'tersedia'): ?>
+                        <h5 class="mb-3">Form Peminjaman</h5>
+                        <form method="post" action="<?= site_url('barang/' . $asset['id'] . '/pinjam') ?>">
+                            <?= csrf_field() ?>
+                            <div class="mb-3">
+                                <label class="form-label">Nama peminjam</label>
+                                <input type="text" name="nama_peminjam" class="form-control" value="<?= esc(old('nama_peminjam')) ?>" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Keperluan</label>
+                                <textarea name="keperluan" class="form-control" rows="3" required><?= esc(old('keperluan')) ?></textarea>
+                            </div>
+                            <button class="btn btn-primary" type="submit">Submit Peminjaman</button>
+                        </form>
+                    <?php else: ?>
+                        <h5 class="mb-3">Proses Pengembalian</h5>
+                        <p class="text-muted">Barang sedang dipinjam. Upload foto pengembalian untuk mengubah status kembali tersedia.</p>
+                        <form method="post" action="<?= site_url('barang/' . $asset['id'] . '/kembalikan') ?>" enctype="multipart/form-data">
+                            <?= csrf_field() ?>
+                            <div class="mb-3">
+                                <label class="form-label">Foto pengembalian</label>
+                                <input type="file" name="foto_pengembalian" class="form-control" accept="image/*" required>
+                            </div>
+                            <button class="btn btn-success" type="submit">Kembalikan</button>
+                        </form>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 text-center">
+                    <h5>QR Code Barang</h5>
+                    <?php if (!empty($asset['qr_code'])): ?>
+                        <img src="<?= base_url('uploads/qrcode/' . $asset['qr_code']) ?>" alt="QR Code" width="220" height="220" class="my-3">
+                        <div class="d-grid gap-2">
+                            <a href="<?= base_url('uploads/qrcode/' . $asset['qr_code']) ?>" download class="btn btn-success"><i class="fas fa-download"></i> Download QR</a>
+                            <button class="btn btn-secondary" onclick="window.print()"><i class="fas fa-print"></i> Print QR</button>
+                        </div>
+                    <?php else: ?>
+                        <p class="text-muted mb-0">QR code belum tersedia.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 </body>
 </html>

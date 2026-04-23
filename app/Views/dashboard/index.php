@@ -30,15 +30,15 @@
             </div>
         </div>
 
-        <!-- Barang Hilang -->
+        <!-- Data Barang Tidak Ada -->
         <div class="col-md-6 col-lg-3">
             <div class="stat-card stat-card-danger">
                 <div class="stat-icon">
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
                 <div class="stat-content">
-                    <p class="stat-label">Barang Hilang</p>
-                    <h3 class="stat-value"><?= $barang_hilang ?></h3>
+                    <p class="stat-label">Data Barang Tidak Ada</p>
+                    <h3 class="stat-value"><?= $data_barang_tidak_ada ?></h3>
                 </div>
             </div>
         </div>
@@ -51,7 +51,7 @@
                 </div>
                 <div class="stat-content">
                     <p class="stat-label">Barang Tersedia</p>
-                    <h3 class="stat-value"><?= $barang_ada ?></h3>
+                    <h3 class="stat-value"><?= $barang_tersedia ?></h3>
                 </div>
             </div>
         </div>

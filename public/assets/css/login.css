@@ -10,7 +10,7 @@ body {
     align-items: center;
     justify-content: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #eaedf0;
+    background: radial-gradient(circle at top left, #e9eeff, #edf1f7 45%, #eef2f7);
     padding: 14px;
 }
 
@@ -20,14 +20,16 @@ body {
 }
 
 .login-card {
-    background: #f2f2f2;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border-radius: 24px;
     overflow: hidden;
     box-shadow: 0 14px 36px rgba(15, 23, 42, 0.12);
 }
 
 .login-header {
-    background: #f2f2f2;
+    background: rgba(255, 255, 255, 0.45);
     color: #12233f;
     padding: 36px 48px 26px;
     border-bottom: 1px solid #d6d8db;
@@ -80,7 +82,7 @@ body {
     padding: 12px 18px;
     font-size: clamp(18px, 1.5vw, 28px);
     width: 100%;
-    background: #f2f2f2;
+    background: rgba(255, 255, 255, 0.62);
 }
 
 .form-control:focus {
@@ -130,6 +132,13 @@ body {
     border: none;
     margin-bottom: 20px;
     font-size: 20px;
+}
+
+.hint-default-user {
+    display: block;
+    margin-top: 8px;
+    color: #4b5563;
+    font-size: 14px;
 }
 
 @media (max-width: 992px) {
