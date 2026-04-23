@@ -2,16 +2,8 @@
     RewriteEngine On
     RewriteBase /sistem-aset/
 
-    # Serve existing files/directories in project root as-is
-    RewriteCond %{REQUEST_FILENAME} -f [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
-    RewriteRule ^ - [L]
-
-    # Serve static assets from the public directory without exposing /public in URL
-    RewriteCond %{DOCUMENT_ROOT}/sistem-aset/public/$1 -f [OR]
-    RewriteCond %{DOCUMENT_ROOT}/sistem-aset/public/$1 -d
-    RewriteRule ^(.*)$ public/$1 [L]
-
-    # Route all other requests through CodeIgniter front controller
-    RewriteRule ^(.*)$ public/index.php/$1 [L,QSA]
+    # Forward all requests to the public folder.
+    # This hides /public in the URL while allowing CodeIgniter to run.
+    RewriteCond %{REQUEST_URI} !^/sistem-aset/public/
+    RewriteRule ^(.*)$ public/$1 [L,QSA]
 </IfModule>

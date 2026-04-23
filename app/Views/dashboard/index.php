@@ -56,18 +56,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Quick Action -->
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="quick-action">
-                <h5>Aksi Cepat</h5>
-                <a href="<?= site_url('assets') ?>" class="btn btn-primary btn-sm">
-                    <i class="fas fa-list"></i> Lihat Semua Barang
-                </a>
-            </div>
-        </div>
-    </div>
 </div>
 
 <style>
