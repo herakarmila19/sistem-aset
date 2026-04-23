@@ -268,7 +268,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="<?= site_url('assets') ?>" class="<?= (current_url(true)->getSegment(1) === 'assets') ? 'active' : '' ?>">
+                    <a href="<?= site_url('barang') ?>" class="<?= (current_url(true)->getSegment(1) === 'barang') ? 'active' : '' ?>">
                         <i class="fas fa-boxes"></i>
                         <span>Barang</span>
                     </a>

@@ -126,18 +126,19 @@
             display: flex;
             gap: 10px;
             margin-top: 30px;
+            justify-content: flex-end;
         }
         
         .btn-submit {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 12px 22px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            flex: 1;
+            min-width: 220px;
         }
         
         .btn-submit:hover {
@@ -150,15 +151,16 @@
             background: #e0e0e0;
             color: #333;
             border: none;
-            padding: 12px 30px;
+            padding: 12px 22px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
         }
         
         .btn-cancel:hover {
@@ -176,7 +178,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <div class="navbar-nav ms-auto">
-                    <a class="nav-link" href="/assets"><i class="fas fa-list"></i> Data Barang</a>
+                    <a class="nav-link" href="/barang"><i class="fas fa-list"></i> Data Barang</a>
                     <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 </div>
             </div>
@@ -186,21 +188,38 @@
     <div class="container">
         <div class="form-card">
             <h2><i class="fas fa-edit"></i> Edit Barang</h2>
+            <?php $validation = session('validation') ?? ($validation ?? null); ?>
+            <?php if ($validation && $validation->getErrors()): ?>
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        <?php foreach ($validation->getErrors() as $error): ?>
+                            <li><?= esc($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
             
-            <form action="/assets/<?= $asset['id'] ?>/update" method="post" enctype="multipart/form-data">
+            <form action="<?= site_url('barang/' . $asset['id'] . '/update') ?>" method="post" enctype="multipart/form-data">
+                <?= csrf_field() ?>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="nama_barang" class="form-label">Nama Barang <span style="color: red;">*</span></label>
-                            <input type="text" class="form-control" id="nama_barang" name="nama_barang" value="<?= $asset['nama_barang'] ?>" required>
+                            <input type="text" class="form-control" id="nama_barang" name="nama_barang" value="<?= old('nama_barang', $asset['nama_barang']) ?>" required>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="merk_barang" class="form-label">Merk Barang</label>
-                            <input type="text" class="form-control" id="merk_barang" name="merk_barang" value="<?= $asset['merk_barang'] ?? '' ?>">
+                            <input type="text" class="form-control" id="merk_barang" name="merk_barang" value="<?= old('merk_barang', $asset['merk_barang'] ?? '') ?>">
                         </div>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="keterangan" class="form-label">Keterangan <span style="color: red;">*</span></label>
+                    <input type="text" class="form-control" id="keterangan" name="keterangan" placeholder="Serial number, tipe, dan/atau nomor ID" value="<?= old('keterangan', $asset['keterangan'] ?? '') ?>" required>
+                    <small style="display: block; color: #666; margin-top: 5px;"><i class="fas fa-info-circle"></i> Isi dengan serial number, tipe, dan/atau nomor ID barang.</small>
                 </div>
                 
                 <div class="row">
@@ -210,7 +229,7 @@
                             <select class="form-select" id="tahun_pengadaan" name="tahun_pengadaan">
                                 <option value="">-- Pilih Tahun --</option>
                                 <?php foreach (array_reverse($years ?? []) as $year): ?>
-                                    <option value="<?= $year ?>" <?= $asset['tahun_pengadaan'] == $year ? 'selected' : '' ?>><?= $year ?></option>
+                                    <option value="<?= $year ?>" <?= old('tahun_pengadaan', $asset['tahun_pengadaan']) == $year ? 'selected' : '' ?>><?= $year ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -220,8 +239,8 @@
                             <label for="jenis_aset" class="form-label">Jenis Aset <span style="color: red;">*</span></label>
                             <select class="form-select" id="jenis_aset" name="jenis_aset" required>
                                 <option value="">-- Pilih Jenis --</option>
-                                <option value="aset" <?= $asset['jenis_aset'] == 'aset' ? 'selected' : '' ?>>Aset</option>
-                                <option value="non_aset" <?= $asset['jenis_aset'] == 'non_aset' ? 'selected' : '' ?>>Non Aset</option>
+                                <option value="aset" <?= old('jenis_aset', $asset['jenis_aset']) == 'aset' ? 'selected' : '' ?>>Aset</option>
+                                <option value="non_aset" <?= old('jenis_aset', $asset['jenis_aset']) == 'non_aset' ? 'selected' : '' ?>>Non Aset</option>
                             </select>
                         </div>
                     </div>
@@ -233,9 +252,9 @@
                             <label for="kondisi" class="form-label">Kondisi Barang <span style="color: red;">*</span></label>
                             <select class="form-select" id="kondisi" name="kondisi" required>
                                 <option value="">-- Pilih Kondisi --</option>
-                                <option value="baik" <?= $asset['kondisi'] == 'baik' ? 'selected' : '' ?>>Baik</option>
-                                <option value="rusak_ringan" <?= $asset['kondisi'] == 'rusak_ringan' ? 'selected' : '' ?>>Rusak Ringan</option>
-                                <option value="rusak_berat" <?= $asset['kondisi'] == 'rusak_berat' ? 'selected' : '' ?>>Rusak Berat</option>
+                                <option value="baik" <?= old('kondisi', $asset['kondisi']) == 'baik' ? 'selected' : '' ?>>Baik</option>
+                                <option value="rusak_ringan" <?= old('kondisi', $asset['kondisi']) == 'rusak_ringan' ? 'selected' : '' ?>>Rusak Ringan</option>
+                                <option value="rusak_berat" <?= old('kondisi', $asset['kondisi']) == 'rusak_berat' ? 'selected' : '' ?>>Rusak Berat</option>
                             </select>
                         </div>
                     </div>
@@ -243,9 +262,9 @@
                         <div class="form-group">
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status">
-                                <option value="ada" <?= $asset['status'] == 'ada' ? 'selected' : '' ?>>Ada</option>
-                                <option value="dipinjam" <?= $asset['status'] == 'dipinjam' ? 'selected' : '' ?>>Dipinjam</option>
-                                <option value="hilang" <?= $asset['status'] == 'hilang' ? 'selected' : '' ?>>Hilang</option>
+                                <option value="ada" <?= old('status', $asset['status']) == 'ada' ? 'selected' : '' ?>>Ada</option>
+                                <option value="dipinjam" <?= old('status', $asset['status']) == 'dipinjam' ? 'selected' : '' ?>>Dipinjam</option>
+                                <option value="hilang" <?= old('status', $asset['status']) == 'hilang' ? 'selected' : '' ?>>Hilang</option>
                             </select>
                         </div>
                     </div>
@@ -268,14 +287,14 @@
                         </label>
                     </div>
                     <img id="preview" class="preview-img" alt="Preview">
-                    <small style="display: block; color: #666; margin-top: 5px;"><i class="fas fa-info-circle"></i> Format: JPG, PNG. Maksimal 5MB</small>
+                    <small style="display: block; color: #666; margin-top: 5px;"><i class="fas fa-info-circle"></i> Format akan otomatis dikonversi ke WEBP. Maksimal upload 1MB, target ukuran file 75KB.</small>
                 </div>
                 
                 <div class="button-group">
                     <button type="submit" class="btn-submit">
                         <i class="fas fa-save"></i> Perbarui Data Barang
                     </button>
-                    <a href="/assets" class="btn-cancel">
+                    <a href="/barang" class="btn-cancel">
                         <i class="fas fa-times"></i> Batal
                     </a>
                 </div>

@@ -4,12 +4,83 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\AssetModel;
-use CodeIgniter\HTTP\ResponseInterface;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 
 class Assets extends BaseController
 {
+    private function processUploadedImageToWebp(?\CodeIgniter\HTTP\Files\UploadedFile $file, ?string $existingFile = null): ?string
+    {
+        if (!$file || !$file->isValid() || $file->hasMoved()) {
+            return $existingFile;
+        }
+
+        $imageInfo = @getimagesize($file->getTempName());
+        if ($imageInfo === false) {
+            return $existingFile;
+        }
+
+        $binary = @file_get_contents($file->getTempName());
+        if ($binary === false) {
+            return $existingFile;
+        }
+
+        $imageResource = @imagecreatefromstring($binary);
+        if (!$imageResource) {
+            return $existingFile;
+        }
+
+        imagepalettetotruecolor($imageResource);
+        imagealphablending($imageResource, true);
+        imagesavealpha($imageResource, true);
+
+        $uploadDir = FCPATH . 'uploads/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $targetName = pathinfo($file->getRandomName(), PATHINFO_FILENAME) . '.webp';
+        $targetPath = $uploadDir . $targetName;
+        $quality = 85;
+        $maxBytes = 75 * 1024;
+        $attempt = 0;
+        $size = 0;
+
+        do {
+            imagewebp($imageResource, $targetPath, $quality);
+            clearstatcache(true, $targetPath);
+            $size = file_exists($targetPath) ? filesize($targetPath) : 0;
+
+            if ($size <= $maxBytes) {
+                break;
+            }
+
+            if ($quality > 35) {
+                $quality -= 5;
+            } else {
+                $scaledWidth = max(320, (int) floor(imagesx($imageResource) * 0.9));
+                $scaledHeight = max(320, (int) floor(imagesy($imageResource) * 0.9));
+                $scaledImage = imagescale($imageResource, $scaledWidth, $scaledHeight, IMG_BICUBIC);
+                if ($scaledImage !== false) {
+                    imagedestroy($imageResource);
+                    $imageResource = $scaledImage;
+                } else {
+                    break;
+                }
+            }
+
+            $attempt++;
+        } while ($attempt < 15);
+
+        imagedestroy($imageResource);
+
+        if ($existingFile && file_exists($uploadDir . $existingFile)) {
+            unlink($uploadDir . $existingFile);
+        }
+
+        return $targetName;
+    }
+
     public function index()
     {
         if (!session('user_id')) {
@@ -26,7 +97,10 @@ class Assets extends BaseController
             return redirect()->to('/');
         }
         $tahunSekarang = date('Y');
-        $data['years'] = range($tahunSekarang - 20, $tahunSekarang);
+        $data = [
+            'years' => range($tahunSekarang - 20, $tahunSekarang),
+            'validation' => \Config\Services::validation(),
+        ];
         return view('assets/create', $data);
     }
 
@@ -36,18 +110,27 @@ class Assets extends BaseController
             return redirect()->to('/');
         }
         
-        $file = $this->request->getFile('foto');
-        $fotoName = null;
-        
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-            $newName = $file->getRandomName();
-            $file->move(FCPATH . 'uploads', $newName);
-            $fotoName = $newName;
+        $rules = [
+            'nama_barang' => 'required|min_length[3]',
+            'keterangan' => 'required|min_length[3]|max_length[255]',
+            'merk_barang' => 'permit_empty|max_length[255]',
+            'tahun_pengadaan' => 'permit_empty|integer',
+            'jenis_aset' => 'required|in_list[aset,non_aset]',
+            'kondisi' => 'required|in_list[baik,rusak_ringan,rusak_berat]',
+            'foto' => 'permit_empty|is_image[foto]|max_size[foto,1024]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->to('/barang/create')->withInput()->with('error', 'Validasi gagal. Periksa kembali input form.');
         }
+
+        $file = $this->request->getFile('foto');
+        $fotoName = $this->processUploadedImageToWebp($file);
         
         $assetModel = new AssetModel();
         $data = [
             'nama_barang' => $this->request->getPost('nama_barang'),
+            'keterangan' => $this->request->getPost('keterangan'),
             'merk_barang' => $this->request->getPost('merk_barang'),
             'tahun_pengadaan' => $this->request->getPost('tahun_pengadaan'),
             'foto' => $fotoName,
@@ -55,7 +138,7 @@ class Assets extends BaseController
             'kondisi' => $this->request->getPost('kondisi'),
             'status' => 'ada',
         ];
-        $assetModel->save($data);
+        $assetModel->insert($data);
         $id = $assetModel->getInsertID();
 
         // Generate QR code
@@ -69,7 +152,7 @@ class Assets extends BaseController
         // Update asset with QR path
         $assetModel->update($id, ['qr_code' => $fileName]);
 
-        return redirect()->to('/assets')->with('success', 'Barang berhasil ditambahkan');
+        return redirect()->to('/barang')->with('success', 'Barang berhasil ditambahkan');
     }
 
     public function show($id)
@@ -79,6 +162,9 @@ class Assets extends BaseController
         }
         $assetModel = new AssetModel();
         $data['asset'] = $assetModel->find($id);
+        if (!$data['asset']) {
+            return redirect()->to('/barang')->with('error', 'Data barang tidak ditemukan.');
+        }
         return view('assets/show', $data);
     }
 
@@ -89,8 +175,12 @@ class Assets extends BaseController
         }
         $assetModel = new AssetModel();
         $data['asset'] = $assetModel->find($id);
+        if (!$data['asset']) {
+            return redirect()->to('/barang')->with('error', 'Data barang tidak ditemukan.');
+        }
         $tahunSekarang = date('Y');
         $data['years'] = range($tahunSekarang - 20, $tahunSekarang);
+        $data['validation'] = \Config\Services::validation();
         return view('assets/edit', $data);
     }
 
@@ -102,22 +192,31 @@ class Assets extends BaseController
         
         $assetModel = new AssetModel();
         $asset = $assetModel->find($id);
+        if (!$asset) {
+            return redirect()->to('/barang')->with('error', 'Data barang tidak ditemukan.');
+        }
+
+        $rules = [
+            'nama_barang' => 'required|min_length[3]',
+            'keterangan' => 'required|min_length[3]|max_length[255]',
+            'merk_barang' => 'permit_empty|max_length[255]',
+            'tahun_pengadaan' => 'permit_empty|integer',
+            'jenis_aset' => 'required|in_list[aset,non_aset]',
+            'kondisi' => 'required|in_list[baik,rusak_ringan,rusak_berat]',
+            'status' => 'required|in_list[ada,dipinjam,hilang]',
+            'foto' => 'permit_empty|is_image[foto]|max_size[foto,1024]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->to('/barang/' . $id . '/edit')->withInput()->with('error', 'Validasi gagal. Periksa kembali input form.');
+        }
         
         $file = $this->request->getFile('foto');
-        $fotoName = $asset['foto'];
-        
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-            // Hapus foto lama jika ada
-            if ($asset['foto'] && file_exists(FCPATH . 'uploads/' . $asset['foto'])) {
-                unlink(FCPATH . 'uploads/' . $asset['foto']);
-            }
-            $newName = $file->getRandomName();
-            $file->move(FCPATH . 'uploads', $newName);
-            $fotoName = $newName;
-        }
+        $fotoName = $this->processUploadedImageToWebp($file, $asset['foto']);
         
         $data = [
             'nama_barang' => $this->request->getPost('nama_barang'),
+            'keterangan' => $this->request->getPost('keterangan'),
             'merk_barang' => $this->request->getPost('merk_barang'),
             'tahun_pengadaan' => $this->request->getPost('tahun_pengadaan'),
             'foto' => $fotoName,
@@ -127,7 +226,7 @@ class Assets extends BaseController
         ];
         $assetModel->update($id, $data);
 
-        return redirect()->to('/assets')->with('success', 'Barang berhasil diperbarui');
+        return redirect()->to('/barang')->with('success', 'Barang berhasil diperbarui');
     }
 
     public function delete($id)
@@ -138,6 +237,9 @@ class Assets extends BaseController
         
         $assetModel = new AssetModel();
         $asset = $assetModel->find($id);
+        if (!$asset) {
+            return redirect()->to('/barang')->with('error', 'Data barang tidak ditemukan.');
+        }
         
         // Hapus foto
         if ($asset['foto'] && file_exists(FCPATH . 'uploads/' . $asset['foto'])) {
@@ -151,6 +253,6 @@ class Assets extends BaseController
         
         $assetModel->delete($id);
 
-        return redirect()->to('/assets')->with('success', 'Barang berhasil dihapus');
+        return redirect()->to('/barang')->with('success', 'Barang berhasil dihapus');
     }
 }

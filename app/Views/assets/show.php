@@ -178,6 +178,11 @@
                                 <span class="info-label">Nama Barang:</span>
                                 <span><?= $asset['nama_barang'] ?></span>
                             </div>
+
+                            <div class="info-row">
+                                <span class="info-label">Keterangan:</span>
+                                <span><?= $asset['keterangan'] ?: '-' ?></span>
+                            </div>
                             
                             <div class="info-row">
                                 <span class="info-label">Merk:</span>
@@ -218,7 +223,7 @@
                     </div>
                 <?php endif; ?>
                 
-                <a href="/assets" class="btn-back">Kembali ke Daftar</a>
+                <a href="/barang" class="btn-back">Kembali ke Daftar</a>
             </div>
         <?php endif; ?>
     </div>
