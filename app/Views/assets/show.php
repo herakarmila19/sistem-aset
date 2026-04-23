@@ -147,7 +147,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/dashboard"><i class="fas fa-box"></i> Sistem Aset</a>
+            <a class="navbar-brand" href="<?= site_url('dashboard') ?>"><i class="fas fa-box"></i> Sistem Aset</a>
         </div>
     </nav>
     
@@ -159,7 +159,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <?php if ($asset['foto']): ?>
-                            <img src="/uploads/<?= $asset['foto'] ?>" alt="<?= $asset['nama_barang'] ?>" class="detail-image">
+                            <img src="<?= base_url('uploads/' . $asset['foto']) ?>" alt="<?= $asset['nama_barang'] ?>" class="detail-image">
                         <?php else: ?>
                             <div class="detail-image" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0;">
                                 <i class="fas fa-image" style="font-size: 80px; color: #ccc;"></i>
@@ -219,11 +219,11 @@
                 <?php if ($asset['qr_code']): ?>
                     <div class="qr-code-section">
                         <h3>QR Code</h3>
-                        <img src="/uploads/<?= $asset['qr_code'] ?>" alt="QR Code" style="width: 250px; height: 250px;">
+                        <img src="<?= base_url('uploads/' . $asset['qr_code']) ?>" alt="QR Code" style="width: 250px; height: 250px;">
                     </div>
                 <?php endif; ?>
                 
-                <a href="/barang" class="btn-back">Kembali ke Daftar</a>
+                <a href="<?= site_url('barang') ?>" class="btn-back">Kembali ke Daftar</a>
             </div>
         <?php endif; ?>
     </div>

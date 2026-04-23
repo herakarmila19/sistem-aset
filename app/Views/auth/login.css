@@ -182,6 +182,37 @@ body {
     border-color: #667eea;
 }
 
+
+.captcha-input-row {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.captcha-input-row .form-control {
+    flex: 1;
+}
+
+.captcha-icon {
+    width: 46px;
+    border: 2px solid #e0e0e0;
+    background: #fff;
+    border-radius: 8px;
+    color: #667eea;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.captcha-icon:hover {
+    border-color: #667eea;
+    background: #f4f6ff;
+}
+
+.captcha-icon:focus-visible {
+    outline: 2px solid rgba(102, 126, 234, 0.3);
+    outline-offset: 2px;
+}
+
 .btn-login {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;

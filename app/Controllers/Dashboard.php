@@ -11,7 +11,7 @@ class Dashboard extends BaseController
     public function index()
     {
         if (!session('user_id')) {
-            return redirect()->to('/');
+            return redirect()->to(site_url('/'));
         }
         
         $assetModel = new AssetModel();
