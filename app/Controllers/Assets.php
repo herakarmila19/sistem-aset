@@ -9,6 +9,78 @@ use Endroid\QrCode\Writer\PngWriter;
 
 class Assets extends BaseController
 {
+    private function processUploadedImageToWebp(?\CodeIgniter\HTTP\Files\UploadedFile $file, ?string $existingFile = null): ?string
+    {
+        if (!$file || !$file->isValid() || $file->hasMoved()) {
+            return $existingFile;
+        }
+
+        $imageInfo = @getimagesize($file->getTempName());
+        if ($imageInfo === false) {
+            return $existingFile;
+        }
+
+        $binary = @file_get_contents($file->getTempName());
+        if ($binary === false) {
+            return $existingFile;
+        }
+
+        $imageResource = @imagecreatefromstring($binary);
+        if (!$imageResource) {
+            return $existingFile;
+        }
+
+        imagepalettetotruecolor($imageResource);
+        imagealphablending($imageResource, true);
+        imagesavealpha($imageResource, true);
+
+        $uploadDir = FCPATH . 'uploads/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $targetName = pathinfo($file->getRandomName(), PATHINFO_FILENAME) . '.webp';
+        $targetPath = $uploadDir . $targetName;
+        $quality = 85;
+        $maxBytes = 75 * 1024;
+        $attempt = 0;
+        $size = 0;
+
+        do {
+            imagewebp($imageResource, $targetPath, $quality);
+            clearstatcache(true, $targetPath);
+            $size = file_exists($targetPath) ? filesize($targetPath) : 0;
+
+            if ($size <= $maxBytes) {
+                break;
+            }
+
+            if ($quality > 35) {
+                $quality -= 5;
+            } else {
+                $scaledWidth = max(320, (int) floor(imagesx($imageResource) * 0.9));
+                $scaledHeight = max(320, (int) floor(imagesy($imageResource) * 0.9));
+                $scaledImage = imagescale($imageResource, $scaledWidth, $scaledHeight, IMG_BICUBIC);
+                if ($scaledImage !== false) {
+                    imagedestroy($imageResource);
+                    $imageResource = $scaledImage;
+                } else {
+                    break;
+                }
+            }
+
+            $attempt++;
+        } while ($attempt < 15);
+
+        imagedestroy($imageResource);
+
+        if ($existingFile && file_exists($uploadDir . $existingFile)) {
+            unlink($uploadDir . $existingFile);
+        }
+
+        return $targetName;
+    }
+
     public function index()
     {
         if (!session('user_id')) {
@@ -40,11 +112,12 @@ class Assets extends BaseController
         
         $rules = [
             'nama_barang' => 'required|min_length[3]',
+            'keterangan' => 'required|min_length[3]|max_length[255]',
             'merk_barang' => 'permit_empty|max_length[255]',
             'tahun_pengadaan' => 'permit_empty|integer',
             'jenis_aset' => 'required|in_list[aset,non_aset]',
             'kondisi' => 'required|in_list[baik,rusak_ringan,rusak_berat]',
-            'foto' => 'permit_empty|is_image[foto]|max_size[foto,5120]',
+            'foto' => 'permit_empty|is_image[foto]|max_size[foto,1024]',
         ];
 
         if (!$this->validate($rules)) {
@@ -52,17 +125,12 @@ class Assets extends BaseController
         }
 
         $file = $this->request->getFile('foto');
-        $fotoName = null;
-        
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-            $newName = $file->getRandomName();
-            $file->move(FCPATH . 'uploads', $newName);
-            $fotoName = $newName;
-        }
+        $fotoName = $this->processUploadedImageToWebp($file);
         
         $assetModel = new AssetModel();
         $data = [
             'nama_barang' => $this->request->getPost('nama_barang'),
+            'keterangan' => $this->request->getPost('keterangan'),
             'merk_barang' => $this->request->getPost('merk_barang'),
             'tahun_pengadaan' => $this->request->getPost('tahun_pengadaan'),
             'foto' => $fotoName,
@@ -130,12 +198,13 @@ class Assets extends BaseController
 
         $rules = [
             'nama_barang' => 'required|min_length[3]',
+            'keterangan' => 'required|min_length[3]|max_length[255]',
             'merk_barang' => 'permit_empty|max_length[255]',
             'tahun_pengadaan' => 'permit_empty|integer',
             'jenis_aset' => 'required|in_list[aset,non_aset]',
             'kondisi' => 'required|in_list[baik,rusak_ringan,rusak_berat]',
             'status' => 'required|in_list[ada,dipinjam,hilang]',
-            'foto' => 'permit_empty|is_image[foto]|max_size[foto,5120]',
+            'foto' => 'permit_empty|is_image[foto]|max_size[foto,1024]',
         ];
 
         if (!$this->validate($rules)) {
@@ -143,20 +212,11 @@ class Assets extends BaseController
         }
         
         $file = $this->request->getFile('foto');
-        $fotoName = $asset['foto'];
-        
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-            // Hapus foto lama jika ada
-            if ($asset['foto'] && file_exists(FCPATH . 'uploads/' . $asset['foto'])) {
-                unlink(FCPATH . 'uploads/' . $asset['foto']);
-            }
-            $newName = $file->getRandomName();
-            $file->move(FCPATH . 'uploads', $newName);
-            $fotoName = $newName;
-        }
+        $fotoName = $this->processUploadedImageToWebp($file, $asset['foto']);
         
         $data = [
             'nama_barang' => $this->request->getPost('nama_barang'),
+            'keterangan' => $this->request->getPost('keterangan'),
             'merk_barang' => $this->request->getPost('merk_barang'),
             'tahun_pengadaan' => $this->request->getPost('tahun_pengadaan'),
             'foto' => $fotoName,

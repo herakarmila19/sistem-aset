@@ -20,6 +20,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Nama Barang</th>
+                        <th>Keterangan</th>
                         <th>Merk</th>
                         <th>Tahun</th>
                         <th>Jenis</th>
@@ -33,6 +34,7 @@
                         <tr>
                             <td><strong>#<?= $asset['id'] ?></strong></td>
                             <td><?= $asset['nama_barang'] ?></td>
+                            <td><?= $asset['keterangan'] ?: '-' ?></td>
                             <td><?= $asset['merk_barang'] ?? '-' ?></td>
                             <td><?= $asset['tahun_pengadaan'] ?? '-' ?></td>
                             <td><span class="badge bg-secondary"><?= ucfirst(str_replace('_', ' ', $asset['jenis_aset'])) ?></span></td>
@@ -401,6 +403,11 @@
                             <div class="asset-body">
                                 <div class="asset-name"><?= $asset['nama_barang'] ?></div>
                                 
+                                <div class="asset-info">
+                                    <span><strong>Keterangan:</strong></span>
+                                    <span><?= $asset['keterangan'] ?: '-' ?></span>
+                                </div>
+
                                 <div class="asset-info">
                                     <span><strong>Merk:</strong></span>
                                     <span><?= $asset['merk_barang'] ?? '-' ?></span>

@@ -12,7 +12,7 @@ class AssetModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['nama_barang', 'merk_barang', 'tahun_pengadaan', 'foto', 'jenis_aset', 'kondisi', 'status', 'qr_code'];
+    protected $allowedFields    = ['nama_barang', 'keterangan', 'merk_barang', 'tahun_pengadaan', 'foto', 'jenis_aset', 'kondisi', 'status', 'qr_code'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

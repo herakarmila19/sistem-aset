@@ -178,6 +178,11 @@
                                 <span class="info-label">Nama Barang:</span>
                                 <span><?= $asset['nama_barang'] ?></span>
                             </div>
+
+                            <div class="info-row">
+                                <span class="info-label">Keterangan:</span>
+                                <span><?= $asset['keterangan'] ?: '-' ?></span>
+                            </div>
                             
                             <div class="info-row">
                                 <span class="info-label">Merk:</span>

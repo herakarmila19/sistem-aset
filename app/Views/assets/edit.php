@@ -126,18 +126,19 @@
             display: flex;
             gap: 10px;
             margin-top: 30px;
+            justify-content: flex-end;
         }
         
         .btn-submit {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 12px 22px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            flex: 1;
+            min-width: 220px;
         }
         
         .btn-submit:hover {
@@ -150,15 +151,16 @@
             background: #e0e0e0;
             color: #333;
             border: none;
-            padding: 12px 30px;
+            padding: 12px 22px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
         }
         
         .btn-cancel:hover {
@@ -212,6 +214,12 @@
                             <input type="text" class="form-control" id="merk_barang" name="merk_barang" value="<?= old('merk_barang', $asset['merk_barang'] ?? '') ?>">
                         </div>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="keterangan" class="form-label">Keterangan <span style="color: red;">*</span></label>
+                    <input type="text" class="form-control" id="keterangan" name="keterangan" placeholder="Serial number, tipe, dan/atau nomor ID" value="<?= old('keterangan', $asset['keterangan'] ?? '') ?>" required>
+                    <small style="display: block; color: #666; margin-top: 5px;"><i class="fas fa-info-circle"></i> Isi dengan serial number, tipe, dan/atau nomor ID barang.</small>
                 </div>
                 
                 <div class="row">
@@ -279,7 +287,7 @@
                         </label>
                     </div>
                     <img id="preview" class="preview-img" alt="Preview">
-                    <small style="display: block; color: #666; margin-top: 5px;"><i class="fas fa-info-circle"></i> Format: JPG, PNG. Maksimal 5MB</small>
+                    <small style="display: block; color: #666; margin-top: 5px;"><i class="fas fa-info-circle"></i> Format akan otomatis dikonversi ke WEBP. Maksimal upload 1MB, target ukuran file 75KB.</small>
                 </div>
                 
                 <div class="button-group">
