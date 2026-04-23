@@ -4,14 +4,16 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\AssetModel;
+use App\Models\AssetQrCodeModel;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 
 class Assets extends BaseController
 {
-    private function generateQrCodeForAsset(int $id): ?string
+    private function generateQrCodeForAsset(int $id): array
     {
-        $qrCode = new QrCode(data: site_url('scan/' . $id));
+        $qrUrl = site_url('scan/' . $id);
+        $qrCode = new QrCode(data: $qrUrl);
         $writer = new PngWriter();
         $result = $writer->write($qrCode);
         $fileName = 'qr_' . $id . '.png';
@@ -23,7 +25,10 @@ class Assets extends BaseController
 
         $result->saveToFile($uploadDir . $fileName);
 
-        return $fileName;
+        return [
+            'path' => $fileName,
+            'url' => $qrUrl,
+        ];
     }
 
     private function processUploadedImageToWebp(?\CodeIgniter\HTTP\Files\UploadedFile $file, ?string $existingFile = null): ?string
@@ -158,8 +163,15 @@ class Assets extends BaseController
         $assetModel->insert($data);
         $id = $assetModel->getInsertID();
 
-        $qrCodeFile = $this->generateQrCodeForAsset((int) $id);
-        $assetModel->update($id, ['qr_code' => $qrCodeFile]);
+        $qrCode = $this->generateQrCodeForAsset((int) $id);
+        $assetModel->update($id, ['qr_code' => $qrCode['path']]);
+
+        $qrCodeModel = new AssetQrCodeModel();
+        $qrCodeModel->save([
+            'asset_id' => $id,
+            'qr_path' => $qrCode['path'],
+            'qr_url' => $qrCode['url'],
+        ]);
 
         return redirect()->to(site_url('barang'))->with('success', 'Barang berhasil ditambahkan');
     }
@@ -200,6 +212,10 @@ class Assets extends BaseController
 
         if ($asset['status'] === 'dipinjam') {
             return redirect()->to(site_url('scan/' . $id))->with('error', 'Barang ini sedang dipinjam.');
+        }
+
+        if ($asset['status'] === 'barang_belum_ditemukan') {
+            return redirect()->to(site_url('scan/' . $id))->with('error', 'Barang belum ditemukan, tidak dapat dipinjam.');
         }
 
         $rules = [
@@ -258,7 +274,7 @@ class Assets extends BaseController
             'tahun_pengadaan' => 'permit_empty|integer',
             'jenis_aset' => 'required|in_list[aset,non_aset]',
             'kondisi' => 'required|in_list[baik,rusak_ringan,rusak_berat]',
-            'status' => 'required|in_list[ada,dipinjam,hilang]',
+            'status' => 'required|in_list[ada,dipinjam,barang_belum_ditemukan]',
             'foto' => 'permit_empty|is_image[foto]|max_size[foto,1024]',
         ];
 

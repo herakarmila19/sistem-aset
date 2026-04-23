@@ -51,9 +51,10 @@
             <div class="col-md-6">
                 <div class="label">Status</div>
                 <?php $isDipinjam = $asset['status'] === 'dipinjam'; ?>
+                <?php $isBelumDitemukan = $asset['status'] === 'barang_belum_ditemukan'; ?>
                 <div>
-                    <span class="badge <?= $isDipinjam ? 'bg-warning text-dark' : 'bg-success' ?> status-badge">
-                        <?= esc(ucfirst($asset['status'])) ?>
+                    <span class="badge <?= $isDipinjam ? 'bg-warning text-dark' : ($isBelumDitemukan ? 'bg-danger' : 'bg-success') ?> status-badge">
+                        <?= esc(ucwords(str_replace('_', ' ', $asset['status']))) ?>
                     </span>
                 </div>
             </div>
@@ -63,6 +64,10 @@
             <div class="alert alert-warning mb-0">
                 Barang ini sedang dipinjam oleh <strong><?= esc($asset['nama_peminjam'] ?: 'Pengguna lain') ?></strong>
                 <?= $asset['keperluan_pinjam'] ? 'untuk ' . esc($asset['keperluan_pinjam']) : '' ?>.
+            </div>
+        <?php elseif ($isBelumDitemukan): ?>
+            <div class="alert alert-danger mb-0">
+                Barang sedang berstatus <strong>barang belum ditemukan</strong>, sehingga tidak dapat dipinjam.
             </div>
         <?php else: ?>
             <h5 class="mb-3">Form Pinjam Barang</h5>

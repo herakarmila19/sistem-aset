@@ -264,7 +264,7 @@
                             <select class="form-select" id="status" name="status">
                                 <option value="ada" <?= old('status', $asset['status']) == 'ada' ? 'selected' : '' ?>>Ada</option>
                                 <option value="dipinjam" <?= old('status', $asset['status']) == 'dipinjam' ? 'selected' : '' ?>>Dipinjam</option>
-                                <option value="hilang" <?= old('status', $asset['status']) == 'hilang' ? 'selected' : '' ?>>Hilang</option>
+                                <option value="barang_belum_ditemukan" <?= old('status', $asset['status']) == 'barang_belum_ditemukan' ? 'selected' : '' ?>>Barang Belum Ditemukan</option>
                             </select>
                         </div>
                     </div>

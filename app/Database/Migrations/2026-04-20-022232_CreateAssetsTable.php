@@ -45,7 +45,7 @@ class CreateAssetsTable extends Migration
             ],
             'status' => [
                 'type'       => 'ENUM',
-                'constraint' => ['ada', 'dipinjam', 'hilang'],
+                'constraint' => ['ada', 'dipinjam', 'barang_belum_ditemukan'],
                 'default'    => 'ada',
             ],
             'qr_code' => [

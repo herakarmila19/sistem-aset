@@ -35,7 +35,7 @@
                     $statusClass = match ($asset['status']) {
                         'ada' => 'success',
                         'dipinjam' => 'warning',
-                        'hilang' => 'danger',
+                        'barang_belum_ditemukan' => 'danger',
                         default => 'secondary',
                     };
 

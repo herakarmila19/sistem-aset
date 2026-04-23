@@ -86,7 +86,7 @@
             color: #856404;
         }
         
-        .badge-hilang {
+        .badge-barang-belum-ditemukan {
             background-color: #f8d7da;
             color: #721c24;
         }
