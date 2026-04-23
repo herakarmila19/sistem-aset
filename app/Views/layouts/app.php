@@ -273,6 +273,12 @@
                         <span>Barang</span>
                     </a>
                 </li>
+                <li>
+                    <a href="<?= site_url('history') ?>" class="<?= (current_url(true)->getSegment(1) === 'history') ? 'active' : '' ?>">
+                        <i class="fas fa-clock-rotate-left"></i>
+                        <span>History</span>
+                    </a>
+                </li>
             </ul>
 
             <div class="sidebar-footer">

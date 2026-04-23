@@ -253,8 +253,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="status" class="form-label">Status</label>
-                            <input type="text" class="form-control" id="status" name="status" value="Ada" disabled>
-                            <small class="form-text-info"><i class="fas fa-info-circle"></i> Status otomatis diisi dengan "Ada"</small>
+                            <input type="text" class="form-control" id="status" name="status" value="Tersedia" disabled>
+                            <small class="form-text-info"><i class="fas fa-info-circle"></i> Status otomatis diisi dengan "Tersedia"</small>
                         </div>
                     </div>
                 </div>

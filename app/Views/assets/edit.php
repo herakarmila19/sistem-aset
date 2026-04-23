@@ -262,9 +262,8 @@
                         <div class="form-group">
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status">
-                                <option value="ada" <?= old('status', $asset['status']) == 'ada' ? 'selected' : '' ?>>Ada</option>
+                                <option value="tersedia" <?= old('status', $asset['status']) == 'tersedia' ? 'selected' : '' ?>>Tersedia</option>
                                 <option value="dipinjam" <?= old('status', $asset['status']) == 'dipinjam' ? 'selected' : '' ?>>Dipinjam</option>
-                                <option value="barang_belum_ditemukan" <?= old('status', $asset['status']) == 'barang_belum_ditemukan' ? 'selected' : '' ?>>Barang Belum Ditemukan</option>
                             </select>
                         </div>
                     </div>
