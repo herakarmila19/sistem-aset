@@ -62,10 +62,7 @@
         <div class="col-md-12">
             <div class="quick-action">
                 <h5>Aksi Cepat</h5>
-                <a href="<?= site_url('assets/create') ?>" class="btn btn-primary btn-sm">
-                    <i class="fas fa-plus"></i> Tambah Barang Baru
-                </a>
-                <a href="<?= site_url('assets') ?>" class="btn btn-secondary btn-sm">
+                <a href="<?= site_url('assets') ?>" class="btn btn-primary btn-sm">
                     <i class="fas fa-list"></i> Lihat Semua Barang
                 </a>
             </div>
