@@ -218,7 +218,7 @@
                     </div>
                 <?php endif; ?>
                 
-                <a href="/assets" class="btn-back">Kembali ke Daftar</a>
+                <a href="/barang" class="btn-back">Kembali ke Daftar</a>
             </div>
         <?php endif; ?>
     </div>

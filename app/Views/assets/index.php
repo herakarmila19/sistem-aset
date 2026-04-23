@@ -6,7 +6,7 @@
     <div class="assets-header mb-4">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="mb-0">Daftar Barang</h2>
-            <a href="<?= site_url('assets/create') ?>" class="btn btn-primary btn-add-new">
+            <a href="<?= site_url('barang/create') ?>" class="btn btn-primary btn-add-new">
                 <i class="fas fa-plus"></i> Tambah Barang Baru
             </a>
         </div>
@@ -60,13 +60,13 @@
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="<?= site_url('assets/' . $asset['id']) ?>" class="btn btn-sm btn-info" title="Lihat Detail">
+                                    <a href="<?= site_url('barang/' . $asset['id']) ?>" class="btn btn-sm btn-info" title="Lihat Detail">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="<?= site_url('assets/' . $asset['id'] . '/edit') ?>" class="btn btn-sm btn-warning" title="Edit">
+                                    <a href="<?= site_url('barang/' . $asset['id'] . '/edit') ?>" class="btn btn-sm btn-warning" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="<?= site_url('assets/' . $asset['id'] . '/delete') ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus barang ini?')" title="Hapus">
+                                    <a href="<?= site_url('barang/' . $asset['id'] . '/delete') ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus barang ini?')" title="Hapus">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </div>
@@ -83,7 +83,7 @@
             </div>
             <h3>Belum Ada Data Barang</h3>
             <p>Mulai dengan menambahkan barang pertama Anda ke sistem</p>
-            <a href="<?= site_url('assets/create') ?>" class="btn btn-primary mt-3">
+            <a href="<?= site_url('barang/create') ?>" class="btn btn-primary mt-3">
                 <i class="fas fa-plus"></i> Tambah Barang Pertama
             </a>
         </div>
@@ -360,7 +360,7 @@
             <p class="mb-0">Kelola semua aset kantor Anda</p>
         </div>
         
-        <a href="/assets/create" class="btn-add">
+        <a href="/barang/create" class="btn-add">
             <i class="fas fa-plus"></i> Tambah Barang Baru
         </a>
         
@@ -435,13 +435,13 @@
                                 <?php endif; ?>
                                 
                                 <div class="asset-actions">
-                                    <a href="/assets/<?= $asset['id'] ?>" class="btn-detail">
+                                    <a href="/barang/<?= $asset['id'] ?>" class="btn-detail">
                                         <i class="fas fa-eye"></i> Lihat
                                     </a>
-                                    <a href="/assets/<?= $asset['id'] ?>/edit" class="btn-edit">
+                                    <a href="/barang/<?= $asset['id'] ?>/edit" class="btn-edit">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    <a href="/assets/<?= $asset['id'] ?>/delete" class="btn-delete" onclick="return confirm('Yakin ingin menghapus barang ini?')">
+                                    <a href="/barang/<?= $asset['id'] ?>/delete" class="btn-delete" onclick="return confirm('Yakin ingin menghapus barang ini?')">
                                         <i class="fas fa-trash"></i> Hapus
                                     </a>
                                 </div>
@@ -455,7 +455,7 @@
                 <i class="fas fa-inbox"></i>
                 <h3>Belum Ada Data Barang</h3>
                 <p>Mulai dengan menambahkan barang pertama Anda</p>
-                <a href="/assets/create" class="btn-add" style="margin-top: 20px;">
+                <a href="/barang/create" class="btn-add" style="margin-top: 20px;">
                     <i class="fas fa-plus"></i> Tambah Barang Pertama
                 </a>
             </div>
