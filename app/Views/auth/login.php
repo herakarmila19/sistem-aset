@@ -16,7 +16,7 @@
                     <img src="<?= base_url('assets/img/logo-kominfotik.svg') ?>" alt="Logo Kominfotik" class="header-logo">
                     <div>
                         <h1 class="brand-title">Sistem Barang</h1>
-                        <p class="brand-subtitle">Suku Dinas Kominfotik Jakarta Selatan</p>
+                        <p class="brand-subtitle">Suku Dinas Komunikasi, Informatika dan Statistik Jakarta Selatan</p>
                     </div>
                 </div>
             </div>
