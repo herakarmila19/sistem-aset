@@ -31,7 +31,6 @@
                     <div class="form-group">
                         <label for="username" class="form-label"><i class="fas fa-user"></i> Username</label>
                         <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan username" required>
-                        <small class="hint-default-user">Username default administrator: <strong>@Adminaset2026</strong></small>
                     </div>
 
                     <div class="form-group">
