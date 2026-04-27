@@ -51,10 +51,6 @@ class Peminjaman extends BaseController
 
     public function kembalikan(int $id)
     {
-        if (!session('user_id')) {
-            return redirect()->to(site_url('/'));
-        }
-
         $asset = $this->assetModel->find($id);
         if (!$asset) {
             return redirect()->to(site_url('barang'))->with('error', 'Data barang tidak ditemukan.');
@@ -71,25 +67,18 @@ class Peminjaman extends BaseController
         }
 
         $rules = [
-            'foto_pengembalian' => 'uploaded[foto_pengembalian]|is_image[foto_pengembalian]|max_size[foto_pengembalian,2048]',
+            'tanggal_kembali' => 'required|valid_date[Y-m-d\TH:i]',
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->to(site_url('barang/' . $id))->withInput()->with('validation', $this->validator);
         }
 
-        $file = $this->request->getFile('foto_pengembalian');
-        $uploadDir = FCPATH . 'uploads/pengembalian/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
-        }
-
-        $fileName = $file->getRandomName();
-        $file->move($uploadDir, $fileName);
+        $tanggalKembali = $this->request->getPost('tanggal_kembali');
 
         $this->peminjamanModel->update($peminjaman['id'], [
-            'tanggal_kembali' => date('Y-m-d H:i:s'),
-            'foto_pengembalian' => $fileName,
+            'tanggal_kembali' => date('Y-m-d H:i:s', strtotime($tanggalKembali)),
+            'foto_pengembalian' => null,
         ]);
 
         $this->assetModel->update($id, ['status' => 'tersedia']);
@@ -99,10 +88,6 @@ class Peminjaman extends BaseController
 
     public function history()
     {
-        if (!session('user_id')) {
-            return redirect()->to(site_url('/'));
-        }
-
         $history = $this->peminjamanModel
             ->select('peminjaman.*, assets.nama_barang')
             ->join('assets', 'assets.id = peminjaman.barang_id')

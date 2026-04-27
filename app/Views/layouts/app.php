@@ -279,6 +279,12 @@
                         <span>History</span>
                     </a>
                 </li>
+                <li>
+                    <a href="<?= site_url('users') ?>" class="<?= (current_url(true)->getSegment(1) === 'users') ? 'active' : '' ?>">
+                        <i class="fas fa-users-cog"></i>
+                        <span>User</span>
+                    </a>
+                </li>
             </ul>
 
             <div class="sidebar-footer">
@@ -296,10 +302,10 @@
                 <h1 class="page-title"><?= $title ?? 'Dashboard' ?></h1>
                 <div class="user-info">
                     <div class="user-avatar">
-                        <?= strtoupper(substr(session('username'), 0, 1)) ?>
+                        <?= strtoupper(substr(session('nama_user') ?? 'Administrator', 0, 1)) ?>
                     </div>
                     <div class="user-name">
-                        <?= session('username') ?>
+                        <?= session('nama_user') ?? 'Administrator' ?>
                     </div>
                 </div>
             </div>

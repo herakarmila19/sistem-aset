@@ -151,6 +151,7 @@ class Assets extends BaseController
         return view('assets/show', [
             'asset' => $asset,
             'title' => 'Detail Barang',
+            'validation' => \Config\Services::validation(),
         ]);
     }
 
