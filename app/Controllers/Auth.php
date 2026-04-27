@@ -38,6 +38,7 @@ class Auth extends BaseController
         if ($user && password_verify($password, $user['password'])) {
             session()->set('user_id', $user['id']);
             session()->set('username', $user['username']);
+            session()->set('nama_user', $user['nama_user'] ?? 'Administrator');
             return redirect()->to(site_url('dashboard'));
         } else {
             return redirect()->back()->with('error', 'Username atau password salah');
