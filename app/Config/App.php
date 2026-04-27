@@ -16,7 +16,7 @@ class App extends BaseConfig
      *
      * E.g., http://example.com/
      */
-    public string $baseURL = '';
+    public string $baseURL = 'https://selatan.jakarta.go.id/modul/sistem-barang/';
 
     public function __construct()
     {

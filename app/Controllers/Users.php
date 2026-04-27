@@ -17,7 +17,7 @@ class Users extends BaseController
     private function ensureSession()
     {
         if (!session('user_id')) {
-            return redirect()->to(site_url('/'));
+            return redirect()->to(base_url('/'));
         }
 
         return null;
@@ -60,7 +60,7 @@ class Users extends BaseController
         ];
 
         if (!$this->validate($rules)) {
-            return redirect()->to(site_url('users/create'))->withInput()->with('validation', $this->validator);
+            return redirect()->to(base_url('users/create'))->withInput()->with('validation', $this->validator);
         }
 
         $this->userModel->insert([
@@ -69,7 +69,7 @@ class Users extends BaseController
             'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
         ]);
 
-        return redirect()->to(site_url('users'))->with('success', 'User admin berhasil ditambahkan.');
+        return redirect()->to(base_url('users'))->with('success', 'User admin berhasil ditambahkan.');
     }
 
     public function edit(int $id)
@@ -80,7 +80,7 @@ class Users extends BaseController
 
         $user = $this->userModel->find($id);
         if (!$user) {
-            return redirect()->to(site_url('users'))->with('error', 'User tidak ditemukan.');
+            return redirect()->to(base_url('users'))->with('error', 'User tidak ditemukan.');
         }
 
         return view('users/edit', [
@@ -98,7 +98,7 @@ class Users extends BaseController
 
         $user = $this->userModel->find($id);
         if (!$user) {
-            return redirect()->to(site_url('users'))->with('error', 'User tidak ditemukan.');
+            return redirect()->to(base_url('users'))->with('error', 'User tidak ditemukan.');
         }
 
         $usernameRule = 'required|min_length[3]|max_length[100]';
@@ -113,7 +113,7 @@ class Users extends BaseController
         ];
 
         if (!$this->validate($rules)) {
-            return redirect()->to(site_url('users/' . $id . '/edit'))->withInput()->with('validation', $this->validator);
+            return redirect()->to(base_url('users/' . $id . '/edit'))->withInput()->with('validation', $this->validator);
         }
 
         $payload = [
@@ -133,7 +133,7 @@ class Users extends BaseController
             session()->set('nama_user', $payload['nama_user']);
         }
 
-        return redirect()->to(site_url('users'))->with('success', 'User admin berhasil diperbarui.');
+        return redirect()->to(base_url('users'))->with('success', 'User admin berhasil diperbarui.');
     }
 
     public function delete(int $id)
@@ -143,16 +143,16 @@ class Users extends BaseController
         }
 
         if ((int) session('user_id') === $id) {
-            return redirect()->to(site_url('users'))->with('error', 'Akun yang sedang dipakai login tidak bisa dihapus.');
+            return redirect()->to(base_url('users'))->with('error', 'Akun yang sedang dipakai login tidak bisa dihapus.');
         }
 
         $user = $this->userModel->find($id);
         if (!$user) {
-            return redirect()->to(site_url('users'))->with('error', 'User tidak ditemukan.');
+            return redirect()->to(base_url('users'))->with('error', 'User tidak ditemukan.');
         }
 
         $this->userModel->delete($id);
 
-        return redirect()->to(site_url('users'))->with('success', 'User admin berhasil dihapus.');
+        return redirect()->to(base_url('users'))->with('success', 'User admin berhasil dihapus.');
     }
 }

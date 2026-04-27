@@ -11,7 +11,7 @@ class Auth extends BaseController
     public function index()
     {
         if (session()->get('user_id')) {
-            return redirect()->to(site_url('dashboard'));
+            return redirect()->to(base_url('dashboard'));
         }
 
         return view('auth/login');
@@ -39,7 +39,7 @@ class Auth extends BaseController
             session()->set('user_id', $user['id']);
             session()->set('username', $user['username']);
             session()->set('nama_user', $user['nama_user'] ?? 'Administrator');
-            return redirect()->to(site_url('dashboard'));
+            return redirect()->to(base_url('dashboard'));
         } else {
             return redirect()->back()->with('error', 'Username atau password salah');
         }
@@ -49,7 +49,7 @@ class Auth extends BaseController
     {
         session()->destroy();
 
-        return redirect()->to(site_url('/'))->with('success', 'Anda berhasil logout.');
+        return redirect()->to(base_url('/'))->with('success', 'Anda berhasil logout.');
     }
 
     public function captcha()
