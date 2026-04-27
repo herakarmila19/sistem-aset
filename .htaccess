@@ -1,9 +1,8 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /modul/sistem-barang/
 
     # Forward all requests to the public folder.
     # This hides /public in the URL while allowing CodeIgniter to run.
-    RewriteCond %{REQUEST_URI} !^/modul/sistem-barang/public/
+    RewriteCond %{REQUEST_URI} !/public/
     RewriteRule ^(.*)$ public/$1 [L,QSA]
 </IfModule>
