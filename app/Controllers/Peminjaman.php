@@ -21,7 +21,7 @@ class Peminjaman extends BaseController
     {
         $asset = $this->assetModel->find($id);
         if (!$asset) {
-            return redirect()->to(site_url('barang'))->with('error', 'Data barang tidak ditemukan.');
+            return redirect()->to(base_url('barang'))->with('error', 'Data barang tidak ditemukan.');
         }
 
         $rules = [
@@ -30,11 +30,11 @@ class Peminjaman extends BaseController
         ];
 
         if (!$this->validate($rules)) {
-            return redirect()->to(site_url('barang/' . $id))->withInput()->with('validation', $this->validator);
+            return redirect()->to(base_url('barang/' . $id))->withInput()->with('validation', $this->validator);
         }
 
         if ($asset['status'] === 'dipinjam') {
-            return redirect()->to(site_url('barang/' . $id))->with('error', 'Barang sedang dipinjam dan belum dapat dipinjam ulang.');
+            return redirect()->to(base_url('barang/' . $id))->with('error', 'Barang sedang dipinjam dan belum dapat dipinjam ulang.');
         }
 
         $this->peminjamanModel->insert([
@@ -46,14 +46,14 @@ class Peminjaman extends BaseController
 
         $this->assetModel->update($id, ['status' => 'dipinjam']);
 
-        return redirect()->to(site_url('barang/' . $id))->with('success', 'Peminjaman berhasil disimpan.');
+        return redirect()->to(base_url('barang/' . $id))->with('success', 'Peminjaman berhasil disimpan.');
     }
 
     public function kembalikan(int $id)
     {
         $asset = $this->assetModel->find($id);
         if (!$asset) {
-            return redirect()->to(site_url('barang'))->with('error', 'Data barang tidak ditemukan.');
+            return redirect()->to(base_url('barang'))->with('error', 'Data barang tidak ditemukan.');
         }
 
         $peminjaman = $this->peminjamanModel
@@ -63,7 +63,7 @@ class Peminjaman extends BaseController
             ->first();
 
         if (!$peminjaman) {
-            return redirect()->to(site_url('barang/' . $id))->with('error', 'Data peminjaman aktif tidak ditemukan.');
+            return redirect()->to(base_url('barang/' . $id))->with('error', 'Data peminjaman aktif tidak ditemukan.');
         }
 
         $rules = [
@@ -71,7 +71,7 @@ class Peminjaman extends BaseController
         ];
 
         if (!$this->validate($rules)) {
-            return redirect()->to(site_url('barang/' . $id))->withInput()->with('validation', $this->validator);
+            return redirect()->to(base_url('barang/' . $id))->withInput()->with('validation', $this->validator);
         }
 
         $tanggalKembali = $this->request->getPost('tanggal_kembali');
@@ -83,7 +83,7 @@ class Peminjaman extends BaseController
 
         $this->assetModel->update($id, ['status' => 'tersedia']);
 
-        return redirect()->to(site_url('barang/' . $id))->with('success', 'Barang berhasil dikembalikan.');
+        return redirect()->to(base_url('barang/' . $id))->with('success', 'Barang berhasil dikembalikan.');
     }
 
     public function history()

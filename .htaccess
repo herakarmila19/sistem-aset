@@ -1,16 +1,7 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteBase /modul/sistem-barang/
 
-    # Akses langsung jika file/folder memang ada di root project.
-    RewriteCond %{REQUEST_FILENAME} -f [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
-    RewriteRule ^ - [L]
-
-    # Layani file/folder dari /public tanpa menampilkan /public di URL.
-    RewriteCond public/$1 -f [OR]
-    RewriteCond public/$1 -d
+    RewriteCond %{REQUEST_URI} !^/modul/sistem-barang/public/
     RewriteRule ^(.*)$ public/$1 [L,QSA]
-
-    # Request aplikasi lainnya ditangani front controller root.
-    RewriteRule ^ index.php [L,QSA]
 </IfModule>

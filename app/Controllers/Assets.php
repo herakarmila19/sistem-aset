@@ -19,7 +19,7 @@ class Assets extends BaseController
     private function ensureSession()
     {
         if (!session('user_id')) {
-            return redirect()->to(site_url('/'));
+            return redirect()->to(base_url('/'));
         }
 
         return null;
@@ -121,7 +121,7 @@ class Assets extends BaseController
         ];
 
         if (!$this->validate($rules)) {
-            return redirect()->to(site_url('barang/create'))->withInput()->with('validation', $this->validator);
+            return redirect()->to(base_url('barang/create'))->withInput()->with('validation', $this->validator);
         }
 
         $assetId = $this->assetModel->insert([
@@ -138,14 +138,14 @@ class Assets extends BaseController
         $fileName = $this->createQrCode((int) $assetId);
         $this->assetModel->update($assetId, ['qr_code' => $fileName]);
 
-        return redirect()->to(site_url('barang'))->with('success', 'Barang berhasil ditambahkan dan QR Code berhasil digenerate.');
+        return redirect()->to(base_url('barang'))->with('success', 'Barang berhasil ditambahkan dan QR Code berhasil digenerate.');
     }
 
     public function show($id)
     {
         $asset = $this->assetModel->find($id);
         if (!$asset) {
-            return redirect()->to(site_url('barang'))->with('error', 'Data barang tidak ditemukan.');
+            return redirect()->to(base_url('barang'))->with('error', 'Data barang tidak ditemukan.');
         }
 
         return view('assets/show', [
@@ -163,7 +163,7 @@ class Assets extends BaseController
 
         $asset = $this->assetModel->find($id);
         if (!$asset) {
-            return redirect()->to(site_url('barang'))->with('error', 'Data barang tidak ditemukan.');
+            return redirect()->to(base_url('barang'))->with('error', 'Data barang tidak ditemukan.');
         }
 
         return view('assets/edit', [
@@ -182,7 +182,7 @@ class Assets extends BaseController
 
         $asset = $this->assetModel->find($id);
         if (!$asset) {
-            return redirect()->to(site_url('barang'))->with('error', 'Data barang tidak ditemukan.');
+            return redirect()->to(base_url('barang'))->with('error', 'Data barang tidak ditemukan.');
         }
 
         $rules = [
@@ -197,7 +197,7 @@ class Assets extends BaseController
         ];
 
         if (!$this->validate($rules)) {
-            return redirect()->to(site_url('barang/' . $id . '/edit'))->withInput()->with('validation', $this->validator);
+            return redirect()->to(base_url('barang/' . $id . '/edit'))->withInput()->with('validation', $this->validator);
         }
 
         $this->assetModel->update($id, [
@@ -211,7 +211,7 @@ class Assets extends BaseController
             'status' => $this->request->getPost('status'),
         ]);
 
-        return redirect()->to(site_url('barang'))->with('success', 'Barang berhasil diperbarui.');
+        return redirect()->to(base_url('barang'))->with('success', 'Barang berhasil diperbarui.');
     }
 
     public function delete($id)
@@ -222,7 +222,7 @@ class Assets extends BaseController
 
         $asset = $this->assetModel->find($id);
         if (!$asset) {
-            return redirect()->to(site_url('barang'))->with('error', 'Data barang tidak ditemukan.');
+            return redirect()->to(base_url('barang'))->with('error', 'Data barang tidak ditemukan.');
         }
 
         if (!empty($asset['foto']) && file_exists(FCPATH . 'uploads/' . $asset['foto'])) {
@@ -235,6 +235,6 @@ class Assets extends BaseController
 
         $this->assetModel->delete($id);
 
-        return redirect()->to(site_url('barang'))->with('success', 'Barang berhasil dihapus.');
+        return redirect()->to(base_url('barang'))->with('success', 'Barang berhasil dihapus.');
     }
 }
