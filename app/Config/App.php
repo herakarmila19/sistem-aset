@@ -18,6 +18,33 @@ class App extends BaseConfig
      */
     public string $baseURL = '';
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        if ($this->baseURL === '' || $this->baseURL === '/') {
+            $this->baseURL = $this->detectBaseURL();
+        }
+    }
+
+    private function detectBaseURL(): string
+    {
+        if (PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg') {
+            return 'http://localhost/';
+        }
+
+        $scheme = (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $script = $_SERVER['SCRIPT_NAME'] ?? '';
+        $path   = trim(str_replace('\\', '/', dirname($script)), '/');
+
+        if ($path !== '' && str_ends_with($path, '/public')) {
+            $path = substr($path, 0, -strlen('/public'));
+        }
+
+        return $scheme . '://' . $host . ($path === '' ? '/' : '/' . $path . '/');
+    }
+
     /**
      * Allowed Hostnames in the Site URL other than the hostname in the baseURL.
      * If you want to accept multiple Hostnames, set this.

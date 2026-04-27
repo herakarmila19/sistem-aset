@@ -1,14 +1,7 @@
 <?php
 
-$uriPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
-$scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+declare(strict_types=1);
 
-if ($scriptName !== '' && str_ends_with($uriPath, $scriptName)) {
-    $uriPath = substr($uriPath, 0, -strlen($scriptName));
-}
-
-$basePath = rtrim($uriPath, '/');
-$redirectPath = ($basePath === '' ? '' : $basePath) . '/public/';
-
-header('Location: ' . $redirectPath, true, 302);
-exit;
+// Jalankan front controller utama dari folder public tanpa memaksa redirect URL.
+// Dengan ini aplikasi tetap dapat diakses dari /sistem-aset/ maupun path deployment lain.
+require __DIR__ . '/public/index.php';
