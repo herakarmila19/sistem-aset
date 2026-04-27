@@ -1,0 +1,6 @@
+current_url(): (runtime pending)
+base_url(): (runtime pending)
+uri_string(): (runtime pending)
+APPPATH: /workspace/sistem-aset/app
+FCPATH: /workspace/sistem-aset/public
+ROOTPATH: /workspace/sistem-aset
