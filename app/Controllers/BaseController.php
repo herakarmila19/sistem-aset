@@ -41,5 +41,19 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
         // $this->session = service('session');
+
+
+        helper('url');
+
+        $debugLines = [
+            'current_url(): ' . current_url(),
+            'base_url(): ' . base_url(),
+            'uri_string(): ' . uri_string(),
+            'APPPATH: ' . APPPATH,
+            'FCPATH: ' . FCPATH,
+            'ROOTPATH: ' . ROOTPATH,
+        ];
+
+        @file_put_contents(ROOTPATH . 'writable/redirect-debug.txt', implode(PHP_EOL, $debugLines) . PHP_EOL);
     }
 }
