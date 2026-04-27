@@ -1,8 +1,16 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Forward all requests to the public folder.
-    # This hides /public in the URL while allowing CodeIgniter to run.
-    RewriteCond %{REQUEST_URI} !/public/
+    # Akses langsung jika file/folder memang ada di root project.
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Layani file/folder dari /public tanpa menampilkan /public di URL.
+    RewriteCond public/$1 -f [OR]
+    RewriteCond public/$1 -d
     RewriteRule ^(.*)$ public/$1 [L,QSA]
+
+    # Request aplikasi lainnya ditangani front controller root.
+    RewriteRule ^ index.php [L,QSA]
 </IfModule>
